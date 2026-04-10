@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstoqueService", "EstoqueService.csproj", "{13D02851-8F8D-4A60-A901-811B2669D6C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13D02851-8F8D-4A60-A901-811B2669D6C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D02851-8F8D-4A60-A901-811B2669D6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D02851-8F8D-4A60-A901-811B2669D6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D02851-8F8D-4A60-A901-811B2669D6C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

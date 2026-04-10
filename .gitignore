@@ -1,0 +1,107 @@
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+.vs/
+*.ncrunch*
+*.[Rr]esharper
+*.DotSettings.user
+_ReSharper*/
+*.snk
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.publishsettings
+orleans.codegen.cs
+__pycache__/
+PublishProfiles/
+*.pubxml
+*.pubxml.user
+*.azurePubxml
+*.publishproj
+*.pfx
+*.p12
+
+
+.env
+.env.*
+!.env.example
+*.secret
+secrets.json
+appsettings.Production.json
+appsettings.Staging.json
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.pnp
+.pnp.js
+dist/
+tmp/
+out-tsc/
+bazel-out/
+.angular/cache/
+.sass-cache/
+/coverage
+testem.log
+/typings
+__screenshots__/
+/connect.lock
+/libpeerconnection.log
+
+
+docker-compose.override.yml
+
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# =============================================================================
+# IDEs — Visual Studio Code
+# =============================================================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/
+*.code-workspace
+
+*.VC.db
+*.VC.opendb
+*.sdf
+ipch/
+.vs/
+*.ncb
+*.opendb
+*.opensdf
+
+# =============================================================================
+# OS
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# Logs & temporários
+# =============================================================================
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
