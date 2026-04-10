@@ -1,0 +1,170 @@
+@use 'variables' as *;
+
+
+// =============================================================================
+// TRANSIÇÕES PADRÃO — Variáveis
+// =============================================================================
+
+$transition-fast:    150ms ease;
+$transition-normal:  300ms ease;
+$transition-slow:    500ms ease;
+
+$transition-fade:    opacity  300ms ease;
+$transition-slide:   transform 300ms ease;
+$transition-scale:   transform 200ms ease;
+
+
+// =============================================================================
+// KEYFRAMES
+// =============================================================================
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+// =============================================================================
+// CLASSES DE ANIMAÇÃO
+// =============================================================================
+
+.fade-in {
+  animation: fadeIn 300ms ease both;
+}
+
+.slide-in {
+  animation: slideIn 300ms ease both;
+}
+
+.scale-in {
+  animation: scaleIn 200ms ease both;
+}
+
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 800ms linear infinite;
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    $color-surface-variant 25%,
+    darken($color-surface-variant, 4%) 50%,
+    $color-surface-variant 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+
+// =============================================================================
+// MIXINS — Para uso em componentes
+// =============================================================================
+
+@mixin fade-in($duration: 300ms, $delay: 0ms) {
+  animation: fadeIn $duration ease $delay both;
+}
+
+@mixin slide-in($duration: 300ms, $delay: 0ms, $distance: -20px) {
+  animation: slideIn $duration ease $delay both;
+}
+
+@mixin scale-in($duration: 200ms, $delay: 0ms) {
+  animation: scaleIn $duration ease $delay both;
+}
+
+@mixin transition-base {
+  transition:
+    opacity       $transition-normal,
+    transform     $transition-normal,
+    background-color $transition-fast,
+    border-color  $transition-fast,
+    box-shadow    $transition-fast;
+}
+
+
+// =============================================================================
+// LOADING SKELETON — Composição com shimmer
+// =============================================================================
+
+%skeleton-base {
+  @extend .shimmer;
+  border-radius: $radius-sm;
+}
+
+.skeleton-text {
+  @extend %skeleton-base;
+  height: 14px;
+  width: 100%;
+
+  & + & { margin-top: $spacing-sm; }
+  &--short { width: 60%; }
+  &--medium { width: 80%; }
+}
+
+.skeleton-avatar {
+  @extend %skeleton-base;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-card {
+  @extend %skeleton-base;
+  height: 120px;
+  width: 100%;
+  border-radius: $radius-lg;
+}
+
+
+// =============================================================================
+// UTILIDADES DE DELAY (stagger em listas)
+// =============================================================================
+
+@for $i from 1 through 8 {
+  .animate-delay-#{$i} {
+    animation-delay: #{$i * 50}ms;
+  }
+}

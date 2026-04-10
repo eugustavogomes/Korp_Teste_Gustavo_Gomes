@@ -1,0 +1,216 @@
+@use 'variables' as *;
+
+
+// =============================================================================
+// SPACING — Margin, Padding, Gap
+// =============================================================================
+
+$spacing-map: (
+  'xs':  $spacing-xs,   //  4px
+  'sm':  $spacing-sm,   //  8px
+  'md':  $spacing-md,   // 16px
+  'lg':  $spacing-lg,   // 24px
+  'xl':  $spacing-xl,   // 32px
+  'xxl': $spacing-xxl,  // 48px
+);
+
+@each $key, $value in $spacing-map {
+  // Margin — todos os lados
+  .m-#{$key}  { margin: $value !important; }
+  .mt-#{$key} { margin-top: $value !important; }
+  .mr-#{$key} { margin-right: $value !important; }
+  .mb-#{$key} { margin-bottom: $value !important; }
+  .ml-#{$key} { margin-left: $value !important; }
+  .mx-#{$key} { margin-left: $value !important; margin-right: $value !important; }
+  .my-#{$key} { margin-top: $value !important; margin-bottom: $value !important; }
+
+  // Padding — todos os lados
+  .p-#{$key}  { padding: $value !important; }
+  .pt-#{$key} { padding-top: $value !important; }
+  .pr-#{$key} { padding-right: $value !important; }
+  .pb-#{$key} { padding-bottom: $value !important; }
+  .pl-#{$key} { padding-left: $value !important; }
+  .px-#{$key} { padding-left: $value !important; padding-right: $value !important; }
+  .py-#{$key} { padding-top: $value !important; padding-bottom: $value !important; }
+
+  // Gap
+  .gap-#{$key} { gap: $value !important; }
+}
+
+.m-0  { margin: 0 !important; }
+.p-0  { padding: 0 !important; }
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+
+
+// =============================================================================
+// FLEXBOX
+// =============================================================================
+
+.flex         { display: flex !important; }
+.flex-col     { display: flex !important; flex-direction: column !important; }
+.flex-wrap    { flex-wrap: wrap !important; }
+.flex-nowrap  { flex-wrap: nowrap !important; }
+.flex-1       { flex: 1 !important; }
+.flex-shrink-0{ flex-shrink: 0 !important; }
+
+.flex-center  {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.flex-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.items-start   { align-items: flex-start !important; }
+.items-center  { align-items: center !important; }
+.items-end     { align-items: flex-end !important; }
+
+.justify-start   { justify-content: flex-start !important; }
+.justify-center  { justify-content: center !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-end     { justify-content: flex-end !important; }
+
+
+// =============================================================================
+// TEXTO — Cores
+// =============================================================================
+
+.text-primary   { color: $color-text-primary !important; }
+.text-secondary { color: $color-text-secondary !important; }
+.text-success   { color: $color-success !important; }
+.text-error     { color: $color-error !important; }
+.text-warning   { color: $color-warning !important; }
+.text-white     { color: $color-background !important; }
+.text-brand     { color: $color-primary !important; }
+
+
+// =============================================================================
+// TEXTO — Tamanhos
+// =============================================================================
+
+.text-xs   { font-size: $font-size-xs !important; }   // 12px
+.text-sm   { font-size: $font-size-sm !important; }   // 14px
+.text-base { font-size: $font-size-md !important; }   // 16px
+.text-lg   { font-size: $font-size-lg !important; }   // 20px
+.text-xl   { font-size: $font-size-xl !important; }   // 24px
+.text-2xl  { font-size: $font-size-2xl !important; }  // 32px
+
+
+// =============================================================================
+// TEXTO — Pesos e alinhamento
+// =============================================================================
+
+.font-light    { font-weight: $font-weight-light !important; }
+.font-regular  { font-weight: $font-weight-regular !important; }
+.font-medium   { font-weight: $font-weight-medium !important; }
+.font-semibold { font-weight: $font-weight-semibold !important; }
+.font-bold     { font-weight: $font-weight-bold !important; }
+
+.text-left   { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right  { text-align: right !important; }
+
+.truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.uppercase    { text-transform: uppercase !important; }
+.lowercase    { text-transform: lowercase !important; }
+.capitalize   { text-transform: capitalize !important; }
+.no-underline { text-decoration: none !important; }
+
+
+// =============================================================================
+// BACKGROUNDS
+// =============================================================================
+
+.bg-white   { background-color: $color-background !important; }
+.bg-light   { background-color: $color-surface !important; }
+.bg-lighter { background-color: $color-surface-variant !important; }
+
+.bg-primary { background-color: $color-primary !important; }
+.bg-success { background-color: #D1FAE5 !important; }
+.bg-error   { background-color: #FEE2E2 !important; }
+.bg-warning { background-color: #FEF3C7 !important; }
+
+
+// =============================================================================
+// BORDERS
+// =============================================================================
+
+$border-default: 1px solid $color-border;
+
+.border   { border: $border-default !important; }
+.border-t { border-top: $border-default !important; }
+.border-b { border-bottom: $border-default !important; }
+.border-l { border-left: $border-default !important; }
+.border-r { border-right: $border-default !important; }
+.border-0 { border: none !important; }
+
+.rounded      { border-radius: $radius-sm !important; }  //  4px
+.rounded-md   { border-radius: $radius-md !important; }  //  8px
+.rounded-lg   { border-radius: $radius-lg !important; }  // 12px
+.rounded-xl   { border-radius: $radius-xl !important; }  // 16px
+.rounded-full { border-radius: 9999px !important; }
+
+
+// =============================================================================
+// DISPLAY
+// =============================================================================
+
+.hidden       { display: none !important; }
+.block        { display: block !important; }
+.inline       { display: inline !important; }
+.inline-block { display: inline-block !important; }
+.flex         { display: flex !important; }
+.grid         { display: grid !important; }
+
+.overflow-hidden { overflow: hidden !important; }
+.overflow-auto   { overflow: auto !important; }
+
+
+// =============================================================================
+// DIMENSÕES
+// =============================================================================
+
+.w-full  { width: 100% !important; }
+.w-auto  { width: auto !important; }
+.h-full  { height: 100% !important; }
+.h-auto  { height: auto !important; }
+
+.min-w-0 { min-width: 0 !important; }
+
+
+// =============================================================================
+// CURSOR
+// =============================================================================
+
+.cursor-pointer     { cursor: pointer !important; }
+.cursor-default     { cursor: default !important; }
+.cursor-not-allowed { cursor: not-allowed !important; }
+.cursor-grab        { cursor: grab !important; }
+
+
+// =============================================================================
+// MISC
+// =============================================================================
+
+.opacity-50   { opacity: 0.5 !important; }
+.opacity-75   { opacity: 0.75 !important; }
+.opacity-100  { opacity: 1 !important; }
+
+.shadow-1 { box-shadow: $shadow-1 !important; }
+.shadow-2 { box-shadow: $shadow-2 !important; }
+.shadow-3 { box-shadow: $shadow-3 !important; }
+.shadow-4 { box-shadow: $shadow-4 !important; }
+.shadow-0 { box-shadow: none !important; }
+
+.pointer-events-none { pointer-events: none !important; }
+.select-none         { user-select: none !important; }
+.whitespace-nowrap   { white-space: nowrap !important; }

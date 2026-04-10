@@ -1,0 +1,272 @@
+@use 'variables' as *;
+
+
+// =============================================================================
+// BREAKPOINTS
+// =============================================================================
+
+$breakpoint-mobile:  480px;
+$breakpoint-tablet:  768px;
+$breakpoint-desktop: 1024px;
+
+@mixin mobile  { @media (max-width: #{$breakpoint-mobile})           { @content; } }
+@mixin tablet  { @media (max-width: #{$breakpoint-tablet})           { @content; } }
+@mixin desktop { @media (min-width: #{$breakpoint-desktop})          { @content; } }
+
+
+// =============================================================================
+// HEADER — Fixed 64px
+// =============================================================================
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  height: $header-height; // 64px
+  background-color: $color-background;
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: $shadow-2; // 0 4px 6px rgba(0,0,0,0.07)
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $spacing-lg; // 0 24px
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    text-decoration: none;
+    color: $color-text-primary;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-md;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+  }
+}
+
+
+// =============================================================================
+// SIDEBAR — Fixed 280px
+// =============================================================================
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: $header-height; // 64px
+  z-index: 90;
+
+  width: $sidebar-width; // 280px
+  min-height: calc(100vh - #{$header-height});
+  background-color: $color-background;
+  border-right: 1px solid #E5E7EB;
+  padding: $spacing-lg 0; // 24px 0
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.25s ease;
+
+  // --- Nav items ---
+  &__section {
+    padding: 0 $spacing-sm;
+    margin-bottom: $spacing-md;
+
+    &-label {
+      display: block;
+      padding: $spacing-xs $spacing-sm;
+      font-size: 11px;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: $color-text-secondary;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: 10px $spacing-sm;
+    border-radius: $radius-md;
+    color: $color-text-secondary;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background-color: $color-surface-variant;
+      color: $color-text-primary;
+    }
+
+    &--active {
+      background-color: $color-primary-lighter;
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+    }
+
+    &__icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+
+    &__label {
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  &__divider {
+    margin: $spacing-sm $spacing-md;
+    border: none;
+    border-top: 1px solid $color-border;
+  }
+
+  // --- Collapsed state (via @tablet) ---
+  @include tablet {
+    width: 64px;
+
+    .sidebar__section-label,
+    .sidebar__item__label {
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+    }
+
+    .sidebar__item {
+      justify-content: center;
+      padding: 10px 0;
+    }
+  }
+}
+
+
+// =============================================================================
+// MAIN CONTENT
+// =============================================================================
+
+.main-content {
+  margin-left: $sidebar-width; // 280px
+  margin-top: $header-height;  // 64px
+  padding: $spacing-xl $spacing-lg; // 32px 24px
+  min-height: calc(100vh - #{$header-height});
+  background-color: $color-surface;
+  transition: margin-left 0.25s ease;
+
+  @include tablet {
+    margin-left: 64px;
+  }
+
+  @include mobile {
+    margin-left: 0;
+    padding: $spacing-md;
+  }
+}
+
+
+// =============================================================================
+// PAGE CONTAINER
+// =============================================================================
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+
+  &__title {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__subtitle {
+    margin: $spacing-xs 0 0;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+
+// =============================================================================
+// GRID
+// =============================================================================
+
+.grid {
+  display: grid;
+  gap: $spacing-lg; // 24px
+
+  // Desktop: 3 colunas
+  grid-template-columns: repeat(3, 1fr);
+
+  // Tablet: 2 colunas
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  // Mobile: 1 coluna
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+
+  // Variantes de coluna explícita
+  &--2-cols {
+    grid-template-columns: repeat(2, 1fr);
+    @include mobile { grid-template-columns: 1fr; }
+  }
+
+  &--4-cols {
+    grid-template-columns: repeat(4, 1fr);
+    @include tablet  { grid-template-columns: repeat(2, 1fr); }
+    @include mobile  { grid-template-columns: 1fr; }
+  }
+
+  &--auto {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+// Flexbox row utilitário
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+
+  &--between { justify-content: space-between; }
+  &--end     { justify-content: flex-end; }
+  &--center  { justify-content: center; }
+}

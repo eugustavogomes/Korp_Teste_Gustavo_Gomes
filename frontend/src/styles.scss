@@ -1,4 +1,19 @@
+// =============================================================================
+// @use declarations — must all come first
+// =============================================================================
+
 @use '@angular/material' as mat;
+@use './styles/variables' as *;
+@use './styles/typography';
+@use './styles/components';
+@use './styles/layout';
+@use './styles/animations';
+@use './styles/utilities';
+
+
+// =============================================================================
+// ANGULAR MATERIAL — Tema
+// =============================================================================
 
 html {
   height: 100%;
@@ -16,70 +31,50 @@ html {
 
 body {
   color-scheme: light;
-  background-color: var(--mat-sys-surface-variant);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  background-color: $color-surface;
+  color: $color-text-primary;
+  font-family: $font-family;
+  font-size: $font-size-sm;
   margin: 0;
   height: 100%;
 }
 
-.page-container {
-  max-width: 1100px;
-  margin: 32px auto;
-  padding: 0 24px;
-}
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-}
-
-.mat-mdc-card {
-  border-radius: 12px !important;
-}
-
-.nav-active {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-radius: 4px;
-}
-
-.status-emitida {
-  color: #1b5e20;
-  background-color: #e8f5e9;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.status-cancelada {
-  color: #b71c1c;
-  background-color: #ffebee;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.error-message {
-  color: var(--mat-sys-error);
-  background-color: color-mix(in srgb, var(--mat-sys-error) 10%, white);
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+// =============================================================================
+// ANGULAR MATERIAL — Overrides pontuais
+// =============================================================================
 
 table.mat-mdc-table {
   border-radius: 0 !important;
+}
+
+.mat-mdc-card {
+  border-radius: $radius-lg !important;
+}
+
+
+// =============================================================================
+// NAVBAR — Active link highlight
+// =============================================================================
+
+.nav-active {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: $radius-sm !important;
+}
+
+
+// =============================================================================
+// ERROR MESSAGE
+// =============================================================================
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  background-color: #FEE2E2;
+  color: $color-error;
+  margin-bottom: $spacing-md;
 }
