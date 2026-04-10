@@ -1,1 +1,63 @@
-<p>lista-produtos works!</p>
+<div class="page-header">
+  <h2>Produtos</h2>
+  <a mat-raised-button color="primary" routerLink="/produtos/novo">
+    <mat-icon>add</mat-icon> Novo Produto
+  </a>
+</div>
+
+@if (erro) {
+  <div class="error-message">
+    <mat-icon>error_outline</mat-icon> {{ erro }}
+  </div>
+}
+
+<mat-card>
+  <mat-card-content style="padding: 0">
+    <table mat-table [dataSource]="produtos" style="width: 100%">
+      <ng-container matColumnDef="codigo">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let p">
+          <code style="background: var(--mat-sys-surface-variant); padding: 2px 8px; border-radius: 4px; font-size: 0.85rem">
+            {{ p.codigo }}
+          </code>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let p"><strong>{{ p.descricao }}</strong></td>
+      </ng-container>
+
+      <ng-container matColumnDef="saldo">
+        <th mat-header-cell *matHeaderCellDef style="text-align: right">Saldo</th>
+        <td mat-cell *matCellDef="let p" style="text-align: right">
+          <span [style.color]="p.saldo === 0 ? 'var(--mat-sys-error)' : 'inherit'" style="font-weight: 500">
+            {{ p.saldo }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p" style="text-align: right">
+          <a mat-icon-button [routerLink]="['/produtos', p.id, 'editar']" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </a>
+          <button mat-icon-button color="warn" (click)="excluir(p.id)" matTooltip="Excluir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas" class="table-row"></tr>
+    </table>
+
+    @if (produtos.length === 0 && !erro) {
+      <div style="text-align: center; padding: 48px; color: var(--mat-sys-outline)">
+        <mat-icon style="font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px">inventory_2</mat-icon>
+        <p style="margin: 0">Nenhum produto cadastrado.</p>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

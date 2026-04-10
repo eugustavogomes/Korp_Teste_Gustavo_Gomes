@@ -1,1 +1,70 @@
-<p>lista-notas works!</p>
+<div class="page-header">
+  <h2>Notas Fiscais</h2>
+  <a mat-raised-button color="primary" routerLink="/notas/nova">
+    <mat-icon>add</mat-icon> Nova Nota
+  </a>
+</div>
+
+@if (erro) {
+  <div class="error-message">
+    <mat-icon>error_outline</mat-icon> {{ erro }}
+  </div>
+}
+
+<mat-card>
+  <mat-card-content style="padding: 0">
+    <table mat-table [dataSource]="notas" style="width: 100%">
+      <ng-container matColumnDef="numero">
+        <th mat-header-cell *matHeaderCellDef>Número</th>
+        <td mat-cell *matCellDef="let n">
+          <strong>{{ n.numero }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dataEmissao">
+        <th mat-header-cell *matHeaderCellDef>Data Emissão</th>
+        <td mat-cell *matCellDef="let n">{{ n.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let n">
+          <span [class]="n.status === StatusNotaFiscal.Emitida ? 'status-emitida' : 'status-cancelada'">
+            {{ n.status === StatusNotaFiscal.Emitida ? 'Emitida' : 'Cancelada' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef style="text-align: right">Total</th>
+        <td mat-cell *matCellDef="let n" style="text-align: right; font-weight: 500">
+          R$ {{ n.total | number: '1.2-2' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let n" style="text-align: right">
+          <a mat-icon-button [routerLink]="['/notas', n.id, 'impressao']" matTooltip="Visualizar / Imprimir">
+            <mat-icon>print</mat-icon>
+          </a>
+          @if (n.status === StatusNotaFiscal.Emitida) {
+            <button mat-icon-button color="warn" (click)="cancelar(n.id)" matTooltip="Cancelar nota">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas" class="table-row"></tr>
+    </table>
+
+    @if (notas.length === 0 && !erro) {
+      <div style="text-align: center; padding: 48px; color: var(--mat-sys-outline)">
+        <mat-icon style="font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px">description</mat-icon>
+        <p style="margin: 0">Nenhuma nota emitida.</p>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>
