@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
@@ -23,6 +23,7 @@ interface ItemForm {
   imports: [FormsModule, DecimalPipe, ButtonModule, SelectModule, InputNumberModule, TableModule, TooltipModule],
   templateUrl: './form-nota.html',
   styleUrl: './form-nota.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormNota implements OnInit {
   private ref            = inject<DynamicDialogRef>(DynamicDialogRef, { optional: true });

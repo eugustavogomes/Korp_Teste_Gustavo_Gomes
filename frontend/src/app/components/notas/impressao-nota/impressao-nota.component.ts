@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -15,6 +15,7 @@ import { ApiError } from '../../../services/error-handler';
   imports: [RouterLink, DatePipe, DecimalPipe, ButtonModule, CardModule, TagModule],
   templateUrl: './impressao-nota.html',
   styleUrl: './impressao-nota.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImpressaoNotaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -26,7 +27,8 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private notaService: NotaFiscalService
+    private notaService: NotaFiscalService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -43,10 +45,10 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
     this.processando = true;
     this.notaService
       .buscarNota(id)
-      .pipe(takeUntil(this.destroy$), finalize(() => (this.processando = false)))
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.processando = false; this.cdr.markForCheck(); }))
       .subscribe({
-        next: nota => (this.nota = nota),
-        error: (err: ApiError) => (this.erro = err),
+        next: nota => { this.nota = nota; this.cdr.markForCheck(); },
+        error: (err: ApiError) => { this.erro = err; },
       });
   }
 
@@ -56,13 +58,19 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
     this.erro = null;
     this.notaService
       .imprimirNota(this.nota.id)
-      .pipe(takeUntil(this.destroy$), finalize(() => (this.processando = false)))
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
           this.nota!.status = StatusNotaFiscal.Fechada;
-          window.print();
+          this.processando = false;
+          this.cdr.markForCheck();
+          setTimeout(() => window.print(), 100);
         },
-        error: (err: ApiError) => (this.erro = err),
+        error: (err: ApiError) => {
+          this.erro = err;
+          this.processando = false;
+          this.cdr.markForCheck();
+        },
       });
   }
 }

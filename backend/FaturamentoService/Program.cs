@@ -23,7 +23,9 @@ try
         .WriteTo.Console()
         .ReadFrom.Configuration(ctx.Configuration));
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers()
+        .AddJsonOptions(o =>
+            o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
     builder.Services.AddFluentValidationAutoValidation();
     builder.Services.AddValidatorsFromAssemblyContaining<EmitirNotaFiscalRequestValidator>();
     builder.Services.AddEndpointsApiExplorer();
@@ -36,10 +38,10 @@ try
         .HandleTransientHttpError()
         .WaitAndRetryAsync(
             retryCount: 3,
-            sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+            sleepDurationProvider: attempt => TimeSpan.FromMilliseconds(200 * attempt),
             onRetry: (result, delay, attempt, _) =>
-                Log.Warning("Tentativa {Attempt}/3 de conectar ao EstoqueService. Aguardando {Delay}s... ({Reason})",
-                    attempt, delay.TotalSeconds, result.Exception?.Message ?? result.Result?.StatusCode.ToString()));
+                Log.Warning("Tentativa {Attempt}/3 de conectar ao EstoqueService. Aguardando {Delay}ms... ({Reason})",
+                    attempt, delay.TotalMilliseconds, result.Exception?.Message ?? result.Result?.StatusCode.ToString()));
 
     var circuitBreakerPolicy = HttpPolicyExtensions
         .HandleTransientHttpError()
@@ -60,6 +62,7 @@ try
     {
         client.BaseAddress = new Uri(
             builder.Configuration["EstoqueService:BaseUrl"] ?? "http://localhost:5189");
+        client.Timeout = TimeSpan.FromSeconds(10);
     })
     .AddPolicyHandler(retryPolicy)
     .AddPolicyHandler(circuitBreakerPolicy);
