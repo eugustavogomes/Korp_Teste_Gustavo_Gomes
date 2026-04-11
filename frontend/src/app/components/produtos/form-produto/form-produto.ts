@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { Produto } from '../../../models/produto.model';
   imports: [FormsModule, ButtonModule, InputTextModule, InputNumberModule],
   templateUrl: './form-produto.html',
   styleUrl: './form-produto.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormProduto implements OnInit {
   private ref    = inject<DynamicDialogRef>(DynamicDialogRef,       { optional: true });
@@ -27,7 +28,8 @@ export class FormProduto implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private produtoService: ProdutoService
+    private produtoService: ProdutoService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -35,8 +37,8 @@ export class FormProduto implements OnInit {
     if (id) {
       this.editando = true;
       this.produtoService.buscarProduto(+id).subscribe({
-        next: p => (this.produto = p),
-        error: () => (this.erro = 'Erro ao carregar produto'),
+        next: p => { this.produto = p; this.cdr.markForCheck(); },
+        error: () => { this.erro = 'Erro ao carregar produto'; this.cdr.markForCheck(); },
       });
     }
   }
@@ -62,6 +64,7 @@ export class FormProduto implements OnInit {
       error: () => {
         this.erro = 'Erro ao salvar produto';
         this.salvando = false;
+        this.cdr.markForCheck();
       },
     });
   }

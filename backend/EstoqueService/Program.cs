@@ -33,16 +33,14 @@ try
     builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
     builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("SecurePolicy", policy =>
-        policy.WithOrigins(
-                "http://localhost:4200"
-            )
-            .WithMethods("GET", "POST", "PUT", "DELETE")
-            .WithHeaders("Authorization", "Content-Type")
-    );
-});
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("SecurePolicy", policy =>
+            policy.WithOrigins("http://localhost:4200")
+                  .WithMethods("GET", "POST", "PUT", "DELETE")
+                  .AllowAnyHeader()
+        );
+    });
 
     var app = builder.Build();
 
@@ -58,7 +56,7 @@ builder.Services.AddCors(options =>
         app.UseSwaggerUI();
     }
 
-    app.UseCors();
+    app.UseCors("SecurePolicy");
     app.UseHttpsRedirection();
     app.MapControllers();
     app.Run();
