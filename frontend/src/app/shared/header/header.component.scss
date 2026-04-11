@@ -5,9 +5,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: $header-height; // 64px
+  height: $header-height;
   background: $color-background;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid $color-border;
   box-shadow: $shadow-2;
   z-index: 1030;
 }
@@ -25,22 +25,15 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: $spacing-sm + 4px; // 12px
+  gap: $spacing-sm;
   text-decoration: none;
   color: $color-primary;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-md;
   flex-shrink: 0;
 
-  h1 {
-    margin: 0;
-    font-size: $font-size-lg;
-    font-weight: $font-weight-semibold;
-    color: $color-primary;
-  }
-
-  mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+  i {
+    font-size: 20px;
   }
 }
 
@@ -48,37 +41,34 @@
   display: flex;
   align-items: center;
   gap: $spacing-xs;
+}
 
-  a[mat-button] {
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-    color: $color-text-secondary;
-    font-weight: $font-weight-medium;
-    border-radius: $radius-sm;
-    transition: color 0.2s, background 0.2s;
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-md;
+  color: $color-text-secondary;
+  text-decoration: none;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-sm;
+  transition: color 0.2s, background 0.2s;
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
+  i { font-size: 15px; }
 
-    &:hover {
-      color: $color-primary;
-      background: rgba($color-primary, 0.06);
-    }
+  &:hover {
+    color: $color-primary;
+    background: rgba(#1E40AF, 0.06);
+  }
 
-    &.nav-active {
-      color: $color-primary;
-      background: rgba($color-primary, 0.1);
-    }
+  &.nav-active {
+    color: $color-primary;
+    background: rgba(#1E40AF, 0.1);
+    font-weight: $font-weight-semibold;
   }
 }
 
 .user-menu {
-  display: flex;
-  align-items: center;
-  gap: $spacing-xs;
   flex-shrink: 0;
 }

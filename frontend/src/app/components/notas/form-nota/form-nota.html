@@ -1,102 +1,97 @@
-<h2 mat-dialog-title>Nova Nota Fiscal</h2>
-
-<mat-dialog-content style="min-width: min(840px, 90vw)">
-  @if (erro) {
-    <div class="error-message" style="margin-bottom: 16px">
-      <mat-icon>error_outline</mat-icon> {{ erro }}
-    </div>
-  }
-
-  <h3 style="margin: 8px 0 12px; font-size: 0.95rem; font-weight: 600; color: var(--mat-sys-on-surface-variant)">
-    ADICIONAR ITEM
-  </h3>
-
-  <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap">
-    <mat-form-field appearance="outline" style="flex: 2; min-width: 200px">
-      <mat-label>Produto</mat-label>
-      <mat-select [(ngModel)]="produtoSelecionado" name="produto">
-        @for (p of produtos; track p.id) {
-          <mat-option [value]="p">
-            <strong>{{ p.codigo }}</strong> — {{ p.descricao }}
-            <span style="color: var(--mat-sys-outline); margin-left: 8px">(saldo: {{ p.saldo }})</span>
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" style="width: 100px">
-      <mat-label>Quantidade</mat-label>
-      <input matInput type="number" [(ngModel)]="quantidade" name="quantidade" min="1" />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" style="width: 140px">
-      <mat-label>Preço Unitário</mat-label>
-      <span matTextPrefix>R$&nbsp;</span>
-      <input matInput type="number" [(ngModel)]="precoUnitario" name="preco" min="0.01" step="0.01" />
-    </mat-form-field>
-
-    <button
-      mat-raised-button
-      color="accent"
-      type="button"
-      style="margin-bottom: 22px"
-      [disabled]="!produtoSelecionado || quantidade <= 0 || precoUnitario <= 0"
-      (click)="adicionarItem()"
-    >
-      <mat-icon>add</mat-icon> Adicionar
-    </button>
+@if (erro) {
+  <div class="error-message mb-md">
+    <i class="pi pi-exclamation-circle"></i> {{ erro }}
   </div>
+}
 
-  @if (itens.length > 0) {
-    <h3 style="margin: 8px 0 12px; font-size: 0.95rem; font-weight: 600; color: var(--mat-sys-on-surface-variant)">
-      ITENS DA NOTA
-    </h3>
+<p class="section-label">ADICIONAR ITEM</p>
 
-    <table mat-table [dataSource]="itens" style="width: 100%; margin-bottom: 8px">
-      <ng-container matColumnDef="descricao">
-        <th mat-header-cell *matHeaderCellDef>Produto</th>
-        <td mat-cell *matCellDef="let item"><strong>{{ item.produto.descricao }}</strong></td>
-      </ng-container>
-      <ng-container matColumnDef="quantidade">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right">Qtd</th>
-        <td mat-cell *matCellDef="let item" style="text-align: right">{{ item.quantidade }}</td>
-      </ng-container>
-      <ng-container matColumnDef="precoUnitario">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right">Preço Un.</th>
-        <td mat-cell *matCellDef="let item" style="text-align: right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="subtotal">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right">Subtotal</th>
-        <td mat-cell *matCellDef="let item" style="text-align: right; font-weight: 500">
-          R$ {{ item.quantidade * item.precoUnitario | number: '1.2-2' }}
+<div class="item-form">
+  <p-select
+    [options]="produtos"
+    [(ngModel)]="produtoSelecionado"
+    optionLabel="descricao"
+    placeholder="Selecionar produto..."
+    class="field-produto"
+    [filter]="true"
+    filterBy="descricao,codigo"
+  >
+    <ng-template #selectedItem let-p>
+      <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
+    </ng-template>
+    <ng-template #item let-p>
+      <div class="select-option">
+        <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
+        <span class="saldo-hint">saldo: {{ p.saldo }}</span>
+      </div>
+    </ng-template>
+  </p-select>
+
+  <div class="item-row">
+    <p-inputnumber
+      [(ngModel)]="quantidade"
+      [min]="1"
+      placeholder="Qtd"
+      class="field-qty"
+    />
+    <p-inputnumber
+      [(ngModel)]="precoUnitario"
+      mode="currency"
+      currency="BRL"
+      locale="pt-BR"
+      [min]="0.01"
+      placeholder="Preço"
+      class="field-price"
+    />
+    <p-button
+      label="Adicionar"
+      icon="pi pi-plus"
+      class="btn-add"
+      [disabled]="!produtoSelecionado || quantidade <= 0 || precoUnitario <= 0"
+      (onClick)="adicionarItem()"
+    />
+  </div>
+</div>
+
+@if (itens.length > 0) {
+  <p class="section-label mt-md">ITENS DA NOTA</p>
+
+  <p-table [value]="itens" [tableStyle]="{'width':'100%'}">
+    <ng-template #header>
+      <tr>
+        <th>Produto</th>
+        <th class="text-right">Qtd</th>
+        <th class="text-right">Preço Un.</th>
+        <th class="text-right">Subtotal</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-item let-i="rowIndex">
+      <tr>
+        <td><strong>{{ item.produto.descricao }}</strong></td>
+        <td class="text-right">{{ item.quantidade }}</td>
+        <td class="text-right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
+        <td class="text-right font-medium">R$ {{ item.quantidade * item.precoUnitario | number: '1.2-2' }}</td>
+        <td class="text-right">
+          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" pTooltip="Remover" (onClick)="removerItem(i)" />
         </td>
-      </ng-container>
-      <ng-container matColumnDef="remover">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let item; let i = index" style="text-align: right">
-          <button mat-icon-button color="warn" (click)="removerItem(i)" matTooltip="Remover">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-      <tr mat-row *matRowDef="let row; columns: colunas"></tr>
-    </table>
+      </tr>
+    </ng-template>
+  </p-table>
 
-    <div style="text-align: right; padding: 8px 0; border-top: 1px solid var(--mat-sys-outline-variant)">
-      <strong>Total: R$ {{ total | number: '1.2-2' }}</strong>
-    </div>
-  } @else {
-    <p style="color: var(--mat-sys-outline); font-size: 0.9rem; margin: 8px 0">
-      Adicione ao menos um item para emitir a nota.
-    </p>
-  }
-</mat-dialog-content>
+  <div class="total-row">
+    <strong>Total: R$ {{ total | number: '1.2-2' }}</strong>
+  </div>
+} @else {
+  <p class="empty-hint">Adicione ao menos um item para emitir a nota.</p>
+}
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancelar()">Cancelar</button>
-  <button mat-raised-button color="primary" [disabled]="itens.length === 0 || salvando" (click)="emitir()">
-    <mat-icon>receipt</mat-icon>
-    {{ salvando ? 'Emitindo...' : 'Emitir Nota' }}
-  </button>
-</mat-dialog-actions>
+<div class="dialog-footer">
+  <p-button label="Cancelar" [text]="true" severity="secondary" (onClick)="cancelar()" />
+  <p-button
+    label="{{ salvando ? 'Emitindo...' : 'Emitir Nota' }}"
+    icon="pi pi-receipt"
+    [disabled]="itens.length === 0 || salvando"
+    (onClick)="emitir()"
+  />
+</div>

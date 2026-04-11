@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog } from '@angular/material/dialog';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { TooltipModule } from 'primeng/tooltip';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { ProdutoService } from '../../../services/produto.service';
 import { Produto } from '../../../models/produto.model';
 import { FormProduto } from '../form-produto/form-produto';
 
 @Component({
   selector: 'app-lista-produtos',
-  imports: [MatTableModule, MatButtonModule, MatIconModule, MatCardModule, MatTooltipModule],
+  imports: [TableModule, ButtonModule, CardModule, TooltipModule, DynamicDialogModule],
   templateUrl: './lista-produtos.html',
   styleUrl: './lista-produtos.scss',
 })
 export class ListaProdutos implements OnInit {
   produtos: Produto[] = [];
-  colunas = ['codigo', 'descricao', 'saldo', 'acoes'];
+  carregando = false;
+  erroCarregamento: string | null = null;
   erro: string | null = null;
 
   constructor(
     private produtoService: ProdutoService,
-    private dialog: MatDialog
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -30,28 +30,42 @@ export class ListaProdutos implements OnInit {
   }
 
   carregar(): void {
+    this.carregando = true;
+    this.erroCarregamento = null;
     this.produtoService.listarProdutos().subscribe({
-      next: p => (this.produtos = p),
-      error: () => (this.erro = 'Erro ao carregar produtos'),
+      next: p => { this.produtos = p; this.carregando = false; },
+      error: () => { this.erroCarregamento = 'Não foi possível carregar os produtos.'; this.carregando = false; },
     });
   }
 
   abrirNovo(): void {
-    this.dialog
-      .open(FormProduto, { width: '480px' })
-      .afterClosed()
-      .subscribe(salvo => { if (salvo) this.carregar(); });
+    this.erro = null;
+    const ref = this.dialogService.open(FormProduto, {
+      header: 'Novo Produto',
+      width: '480px',
+      modal: true,
+    });
+    ref!.onClose.subscribe((salvo: boolean) => {
+      if (salvo) this.carregar();
+    });
   }
 
-  abrirEditar(id: number): void {
-    this.dialog
-      .open(FormProduto, { width: '480px', data: { id } })
-      .afterClosed()
-      .subscribe(salvo => { if (salvo) this.carregar(); });
+  abrirEditar(produto: Produto): void {
+    this.erro = null;
+    const ref = this.dialogService.open(FormProduto, {
+      header: 'Editar Produto',
+      width: '480px',
+      modal: true,
+      data: { id: produto.id },
+    });
+    ref!.onClose.subscribe((salvo: boolean) => {
+      if (salvo) this.carregar();
+    });
   }
 
   excluir(id: number): void {
     if (!confirm('Deseja excluir este produto?')) return;
+    this.erro = null;
     this.produtoService.excluirProduto(id).subscribe({
       next: () => this.carregar(),
       error: () => (this.erro = 'Erro ao excluir produto'),

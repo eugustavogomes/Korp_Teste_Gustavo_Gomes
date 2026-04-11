@@ -2,25 +2,23 @@
   <div class="header-content">
 
     <a class="logo" routerLink="/">
-      <mat-icon>receipt_long</mat-icon>
-      <h1>Nota Fiscal</h1>
+      <i class="pi pi-receipt"></i>
+      <span>Nota Fiscal</span>
     </a>
 
     <nav class="header-nav">
-      <a mat-button routerLink="/notas" routerLinkActive="nav-active">
-        <mat-icon>description</mat-icon>
+      <a routerLink="/notas" routerLinkActive="nav-active" class="nav-link">
+        <i class="pi pi-file-edit"></i>
         Notas Fiscais
       </a>
-      <a mat-button routerLink="/produtos" routerLinkActive="nav-active">
-        <mat-icon>inventory_2</mat-icon>
+      <a routerLink="/produtos" routerLinkActive="nav-active" class="nav-link">
+        <i class="pi pi-box"></i>
         Produtos
       </a>
     </nav>
 
     <div class="user-menu">
-      <button mat-icon-button>
-        <mat-icon>person</mat-icon>
-      </button>
+      <p-button icon="pi pi-user" [text]="true" [rounded]="true" severity="secondary" />
     </div>
 
   </div>

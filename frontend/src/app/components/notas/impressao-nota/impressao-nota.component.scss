@@ -1,0 +1,115 @@
+@use '../../../../styles/variables' as *;
+
+.page-header h2 {
+  margin: 0;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.nota-fechada-hint {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  i { font-size: 14px; }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xxl;
+  color: $color-text-secondary;
+  gap: $spacing-md;
+
+  i { font-size: 32px; }
+}
+
+.nota-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-lg;
+  padding: $spacing-lg;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.info-label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-text-secondary;
+}
+
+.info-value {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.card-title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1px solid $color-border;
+}
+
+.itens-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    padding: $spacing-sm $spacing-lg;
+    text-align: left;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $color-text-secondary;
+    background: $color-surface-variant;
+    border-bottom: 1px solid $color-border;
+  }
+
+  td {
+    padding: $spacing-sm $spacing-lg;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    border-bottom: 1px solid #F3F4F6;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tfoot .total-row td {
+    border-top: 2px solid $color-border;
+    border-bottom: none;
+    padding-top: $spacing-md;
+    font-weight: $font-weight-semibold;
+  }
+
+  .total-value {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+  }
+}
+
+@media print {
+  :host { display: block; }
+}

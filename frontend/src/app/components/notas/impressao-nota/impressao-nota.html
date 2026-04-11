@@ -1,12 +1,13 @@
-@if (processando) {
-  <div style="display: flex; justify-content: center; padding: 64px">
-    <p style="color: var(--mat-sys-outline)">Carregando nota...</p>
+@if (processando && !nota) {
+  <div class="loading-state">
+    <i class="pi pi-spin pi-spinner"></i>
+    <p>Carregando nota...</p>
   </div>
 }
 
 @if (erro) {
   <div class="error-message">
-    <mat-icon>{{ erro.tipo === 'servico_indisponivel' ? 'cloud_off' : erro.tipo === 'rede' ? 'wifi_off' : 'error_outline' }}</mat-icon>
+    <i class="pi pi-exclamation-circle"></i>
     {{ erro.mensagem }}
   </div>
 }
@@ -14,80 +15,76 @@
 @if (nota) {
   <div class="page-header">
     <h2>Nota Fiscal</h2>
-    <div style="display: flex; gap: 8px">
-      <a mat-stroked-button routerLink="/notas">
-        <mat-icon>arrow_back</mat-icon> Voltar
-      </a>
+    <div class="header-actions">
+      <p-button
+        label="Voltar"
+        icon="pi pi-arrow-left"
+        [outlined]="true"
+        severity="secondary"
+        routerLink="/notas"
+      />
       @if (nota.status === StatusNotaFiscal.Aberta) {
-        <button mat-raised-button color="primary" [disabled]="processando" (click)="imprimir()">
-          <mat-icon>{{ processando ? 'hourglass_empty' : 'print' }}</mat-icon>
-          {{ processando ? 'Processando...' : 'Imprimir' }}
-        </button>
+        <p-button
+          [label]="processando ? 'Processando...' : 'Imprimir'"
+          [icon]="processando ? 'pi pi-spin pi-spinner' : 'pi pi-print'"
+          [disabled]="processando"
+          (onClick)="imprimir()"
+        />
       } @else {
-        <span style="display: flex; align-items: center; gap: 4px; color: var(--mat-sys-outline); font-size: 0.9rem">
-          <mat-icon style="font-size: 18px; width: 18px; height: 18px">lock</mat-icon>
-          Nota fechada — impressão não permitida
+        <span class="nota-fechada-hint">
+          <i class="pi pi-lock"></i> Nota fechada — impressão não permitida
         </span>
       }
     </div>
   </div>
 
-  <mat-card style="margin-bottom: 24px">
-    <mat-card-content style="padding: 24px">
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px">
-        <div>
-          <p style="margin: 0; font-size: 0.75rem; color: var(--mat-sys-outline); text-transform: uppercase; letter-spacing: 0.05em">Número</p>
-          <p style="margin: 4px 0 0; font-size: 1rem; font-weight: 600">{{ nota.numero }}</p>
-        </div>
-        <div>
-          <p style="margin: 0; font-size: 0.75rem; color: var(--mat-sys-outline); text-transform: uppercase; letter-spacing: 0.05em">Data de Emissão</p>
-          <p style="margin: 4px 0 0; font-size: 1rem">{{ nota.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</p>
-        </div>
-        <div>
-          <p style="margin: 0; font-size: 0.75rem; color: var(--mat-sys-outline); text-transform: uppercase; letter-spacing: 0.05em">Status</p>
-          <p style="margin: 4px 0 0">
-            <span [class]="nota.status === StatusNotaFiscal.Aberta ? 'status-emitida' : 'status-cancelada'">
-              {{ nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada' }}
-            </span>
-          </p>
-        </div>
+  <p-card styleClass="mb-lg">
+    <div class="nota-info-grid">
+      <div class="info-item">
+        <span class="info-label">Número</span>
+        <span class="info-value">{{ nota.numero }}</span>
       </div>
-    </mat-card-content>
-  </mat-card>
+      <div class="info-item">
+        <span class="info-label">Data de Emissão</span>
+        <span class="info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Status</span>
+        <p-tag
+          [value]="nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada'"
+          [severity]="nota.status === StatusNotaFiscal.Aberta ? 'info' : 'secondary'"
+        />
+      </div>
+    </div>
+  </p-card>
 
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Itens</mat-card-title>
-    </mat-card-header>
-    <mat-card-content style="padding: 0">
-      <table style="width: 100%; border-collapse: collapse">
-        <thead>
-          <tr style="background: var(--mat-sys-surface-variant)">
-            <th style="text-align: left; padding: 12px 24px; font-weight: 500">Produto</th>
-            <th style="text-align: right; padding: 12px 24px; font-weight: 500">Qtd</th>
-            <th style="text-align: right; padding: 12px 24px; font-weight: 500">Preço Un.</th>
-            <th style="text-align: right; padding: 12px 24px; font-weight: 500">Subtotal</th>
+  <p-card>
+    <div class="card-title">Itens da Nota</div>
+    <table class="itens-table">
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th class="text-right">Qtd</th>
+          <th class="text-right">Preço Un.</th>
+          <th class="text-right">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of nota.itens; track item.id) {
+          <tr>
+            <td>{{ item.descricao }}</td>
+            <td class="text-right">{{ item.quantidade }}</td>
+            <td class="text-right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
+            <td class="text-right">R$ {{ item.subtotal | number: '1.2-2' }}</td>
           </tr>
-        </thead>
-        <tbody>
-          @for (item of nota.itens; track item.id) {
-            <tr style="border-top: 1px solid var(--mat-sys-outline-variant)">
-              <td style="padding: 12px 24px">{{ item.descricao }}</td>
-              <td style="text-align: right; padding: 12px 24px">{{ item.quantidade }}</td>
-              <td style="text-align: right; padding: 12px 24px">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
-              <td style="text-align: right; padding: 12px 24px">R$ {{ item.subtotal | number: '1.2-2' }}</td>
-            </tr>
-          }
-        </tbody>
-        <tfoot>
-          <tr style="border-top: 2px solid var(--mat-sys-outline-variant); background: var(--mat-sys-surface-variant)">
-            <td colspan="3" style="text-align: right; padding: 16px 24px; font-weight: 600">Total</td>
-            <td style="text-align: right; padding: 16px 24px; font-weight: 700; font-size: 1.1rem">
-              R$ {{ nota.total | number: '1.2-2' }}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </mat-card-content>
-  </mat-card>
+        }
+      </tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3" class="text-right">Total</td>
+          <td class="text-right total-value">R$ {{ nota.total | number: '1.2-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </p-card>
 }

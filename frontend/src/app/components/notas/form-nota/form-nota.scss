@@ -1,0 +1,68 @@
+@use '../../../../styles/variables' as *;
+
+.section-label {
+  margin: 0 0 $spacing-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text-secondary;
+}
+
+.item-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.field-produto {
+  width: 100%;
+}
+
+.item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+}
+
+.field-qty  { width: 120px; flex-shrink: 0; }
+.field-price { width: 180px; flex-shrink: 0; }
+.btn-add    { flex-shrink: 0; align-self: flex-start; }
+
+.select-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-md;
+  width: 100%;
+}
+
+.saldo-hint {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.total-row {
+  text-align: right;
+  padding: $spacing-sm 0 0;
+  border-top: 1px solid $color-border;
+  margin-top: $spacing-xs;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.empty-hint {
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  margin: $spacing-md 0;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  padding-top: $spacing-lg;
+  margin-top: $spacing-md;
+  border-top: 1px solid $color-border;
+}

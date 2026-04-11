@@ -1,8 +1,7 @@
 // =============================================================================
-// @use declarations — must all come first
+// DESIGN SYSTEM — @use must come first
 // =============================================================================
 
-@use '@angular/material' as mat;
 @use './styles/variables' as *;
 @use './styles/typography';
 @use './styles/components';
@@ -12,25 +11,16 @@
 
 
 // =============================================================================
-// ANGULAR MATERIAL — Tema
+// BASE
 // =============================================================================
+
+@import 'primeicons/primeicons.css';
 
 html {
   height: 100%;
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
-      ),
-      typography: Roboto,
-      density: 0,
-    )
-  );
 }
 
 body {
-  color-scheme: light;
   background-color: $color-surface;
   color: $color-text-primary;
   font-family: $font-family;
@@ -41,25 +31,80 @@ body {
 
 
 // =============================================================================
-// ANGULAR MATERIAL — Overrides pontuais
+// PRIMENG — Overrides pontuais com variáveis do design system
 // =============================================================================
 
-table.mat-mdc-table {
-  border-radius: 0 !important;
-}
-
-.mat-mdc-card {
+// Card
+.p-card {
   border-radius: $radius-lg !important;
+  box-shadow: $shadow-2 !important;
+  border: 1px solid $color-border !important;
+}
+
+.p-card .p-card-body {
+  padding: 0 !important;
+}
+
+// Table
+.p-datatable .p-datatable-thead > tr > th {
+  background: $color-surface-variant !important;
+  font-weight: $font-weight-semibold !important;
+  color: $color-text-primary !important;
+  font-size: $font-size-sm !important;
+  border-bottom: 1px solid $color-border !important;
+  padding: $spacing-md !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: $spacing-md !important;
+  font-size: $font-size-sm !important;
+  color: $color-text-primary !important;
+  border-bottom: 1px solid #F3F4F6 !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: $color-surface !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:last-child > td {
+  border-bottom: none !important;
+}
+// Dialog
+.p-dialog .p-dialog-header {
+  background: $color-background !important;
+  border-bottom: 1px solid $color-border !important;
+  padding: $spacing-md $spacing-lg !important;
+  font-weight: $font-weight-semibold !important;
+  font-size: $font-size-md !important;
+  color: $color-text-primary !important;
+}
+
+.p-dialog .p-dialog-content {
+  background: $color-background !important;
+  padding: $spacing-lg !important;
+}
+
+.p-dialog .p-dialog-footer {
+  background: $color-background !important;
+  border-top: 1px solid $color-border !important;
+  padding: $spacing-md $spacing-lg !important;
+}
+
+// Input
+.p-inputtext,
+.p-select {
+  font-size: $font-size-sm !important;
 }
 
 
 // =============================================================================
-// NAVBAR — Active link highlight
+// TABLE LOADING — centraliza o spinner no meio do conteúdo
 // =============================================================================
 
-.nav-active {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-radius: $radius-sm !important;
+.p-datatable-loading-overlay {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 

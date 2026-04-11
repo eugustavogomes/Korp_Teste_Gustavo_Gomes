@@ -1,63 +1,58 @@
 <div class="page-header">
   <h2>Produtos</h2>
-  <button mat-raised-button color="primary" (click)="abrirNovo()">
-    <mat-icon>add</mat-icon> Novo Produto
-  </button>
+  <p-button label="Novo Produto" icon="pi pi-plus" (onClick)="abrirNovo()" />
 </div>
 
 @if (erro) {
   <div class="error-message">
-    <mat-icon>error_outline</mat-icon> {{ erro }}
+    <i class="pi pi-exclamation-circle"></i> {{ erro }}
   </div>
 }
 
-<mat-card>
-  <mat-card-content style="padding: 0">
-    <table mat-table [dataSource]="produtos" style="width: 100%">
-      <ng-container matColumnDef="codigo">
-        <th mat-header-cell *matHeaderCellDef>Código</th>
-        <td mat-cell *matCellDef="let p">
-          <code style="background: var(--mat-sys-surface-variant); padding: 2px 8px; border-radius: 4px; font-size: 0.85rem">
-            {{ p.codigo }}
-          </code>
+<p-card>
+  <p-table [value]="produtos" [tableStyle]="{'width':'100%'}" [loading]="carregando">
+
+    <ng-template #header>
+      <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th class="text-right">Saldo</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-p>
+      <tr>
+        <td><code class="codigo-badge">{{ p.codigo }}</code></td>
+        <td><strong>{{ p.descricao }}</strong></td>
+        <td class="text-right">
+          <span [class]="p.saldo === 0 ? 'saldo-zero' : 'saldo-ok'">{{ p.saldo }}</span>
         </td>
-      </ng-container>
-
-      <ng-container matColumnDef="descricao">
-        <th mat-header-cell *matHeaderCellDef>Descrição</th>
-        <td mat-cell *matCellDef="let p"><strong>{{ p.descricao }}</strong></td>
-      </ng-container>
-
-      <ng-container matColumnDef="saldo">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right">Saldo</th>
-        <td mat-cell *matCellDef="let p" style="text-align: right">
-          <span [style.color]="p.saldo === 0 ? 'var(--mat-sys-error)' : 'inherit'" style="font-weight: 500">
-            {{ p.saldo }}
-          </span>
+        <td class="text-right">
+          <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" pTooltip="Editar" (onClick)="abrirEditar(p)" />
+          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" pTooltip="Excluir" (onClick)="excluir(p.id)" />
         </td>
-      </ng-container>
+      </tr>
+    </ng-template>
 
-      <ng-container matColumnDef="acoes">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let p" style="text-align: right">
-          <button mat-icon-button (click)="abrirEditar(p.id)" matTooltip="Editar">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="excluir(p.id)" matTooltip="Excluir">
-            <mat-icon>delete</mat-icon>
-          </button>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4">
+          @if (erroCarregamento) {
+            <div class="empty-state empty-state--error">
+              <i class="pi pi-wifi" style="opacity:0.4"></i>
+              <p>{{ erroCarregamento }}</p>
+              <p-button label="Tentar novamente" icon="pi pi-refresh" [text]="true" (onClick)="carregar()" />
+            </div>
+          } @else if (!carregando) {
+            <div class="empty-state">
+              <i class="pi pi-box"></i>
+              <p>Nenhum produto cadastrado.</p>
+            </div>
+          }
         </td>
-      </ng-container>
+      </tr>
+    </ng-template>
 
-      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-      <tr mat-row *matRowDef="let row; columns: colunas" class="table-row"></tr>
-    </table>
-
-    @if (produtos.length === 0 && !erro) {
-      <div style="text-align: center; padding: 48px; color: var(--mat-sys-outline)">
-        <mat-icon style="font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px">inventory_2</mat-icon>
-        <p style="margin: 0">Nenhum produto cadastrado.</p>
-      </div>
-    }
-  </mat-card-content>
-</mat-card>
+  </p-table>
+</p-card>
