@@ -1,5 +1,8 @@
 using FaturamentoService.Data;
+using FaturamentoService.Repositories;
+using FaturamentoService.Repositories.Interfaces;
 using FaturamentoService.Services;
+using FaturamentoService.Services.Interfaces;
 using FaturamentoService.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -49,6 +52,9 @@ try
                 Log.Information("EstoqueService disponível novamente. Circuit fechado."),
             onHalfOpen: () =>
                 Log.Information("Testando disponibilidade do EstoqueService..."));
+
+    builder.Services.AddScoped<INotaFiscalRepository, NotaFiscalRepository>();
+    builder.Services.AddScoped<INotaFiscalService, NotaFiscalService>();
 
     builder.Services.AddHttpClient<IEstoqueClient, EstoqueClient>(client =>
     {

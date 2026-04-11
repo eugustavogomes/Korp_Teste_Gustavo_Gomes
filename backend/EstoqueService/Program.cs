@@ -1,4 +1,8 @@
 using EstoqueService.Data;
+using EstoqueService.Repositories;
+using EstoqueService.Repositories.Interfaces;
+using EstoqueService.Services;
+using EstoqueService.Services.Interfaces;
 using EstoqueService.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -25,6 +29,9 @@ try
 
     builder.Services.AddDbContext<EstoqueDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+    builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
     builder.Services.AddCors(options =>
     {

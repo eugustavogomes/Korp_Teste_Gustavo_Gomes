@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using EstoqueService.Data;
-using EstoqueService.Models;
 using EstoqueService.DTOs;
+using EstoqueService.Exceptions;
+using EstoqueService.Models;
+using EstoqueService.Services.Interfaces;
 
 namespace EstoqueService.Controllers;
 
@@ -10,25 +10,23 @@ namespace EstoqueService.Controllers;
 [Route("api/[controller]")]
 public class ProdutosController : ControllerBase
 {
-    private readonly EstoqueDbContext _context;
+    private readonly IProdutoService _service;
     private readonly ILogger<ProdutosController> _logger;
 
-    public ProdutosController(EstoqueDbContext context, ILogger<ProdutosController> logger)
+    public ProdutosController(IProdutoService service, ILogger<ProdutosController> logger)
     {
-        _context = context;
+        _service = service;
         _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
-    {
-        return await _context.Produtos.ToListAsync();
-    }
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Produto>> GetProduto(int id)
     {
-        var produto = await _context.Produtos.FindAsync(id);
+        var produto = await _service.GetByIdAsync(id);
         if (produto == null)
             return NotFound();
         return produto;
@@ -39,10 +37,8 @@ public class ProdutosController : ControllerBase
     {
         try
         {
-            produto.DataCriacao = DateTime.UtcNow;
-            _context.Produtos.Add(produto);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProduto), new { id = produto.Id }, produto);
+            var criado = await _service.CreateAsync(produto);
+            return CreatedAtAction(nameof(GetProduto), new { id = criado.Id }, criado);
         }
         catch (Exception ex)
         {
@@ -59,17 +55,16 @@ public class ProdutosController : ControllerBase
 
         try
         {
-            produto.DataAtualizacao = DateTime.UtcNow;
-            _context.Entry(produto).State = EntityState.Modified;
-            _context.Entry(produto).Property(p => p.DataCriacao).IsModified = false;
-            await _context.SaveChangesAsync();
+            await _service.UpdateAsync(id, produto);
             return NoContent();
         }
-        catch (DbUpdateConcurrencyException)
+        catch (ProdutoNotFoundException)
         {
-            if (!await _context.Produtos.AnyAsync(p => p.Id == id))
-                return NotFound();
-            throw;
+            return NotFound();
+        }
+        catch (ConcurrencyException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (Exception ex)
         {
@@ -83,13 +78,12 @@ public class ProdutosController : ControllerBase
     {
         try
         {
-            var produto = await _context.Produtos.FindAsync(id);
-            if (produto == null)
-                return NotFound();
-
-            _context.Produtos.Remove(produto);
-            await _context.SaveChangesAsync();
+            await _service.DeleteAsync(id);
             return NoContent();
+        }
+        catch (ProdutoNotFoundException)
+        {
+            return NotFound();
         }
         catch (Exception ex)
         {
@@ -103,32 +97,20 @@ public class ProdutosController : ControllerBase
     {
         try
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            foreach (var item in request.Itens)
-            {
-                var produto = await _context.Produtos
-                    .FirstOrDefaultAsync(p => p.Id == item.ProdutoId);
-
-                if (produto == null)
-                    return NotFound($"Produto {item.ProdutoId} não encontrado");
-
-                if (produto.Saldo < item.Quantidade)
-                    return BadRequest($"Saldo insuficiente para '{produto.Descricao}': disponível {produto.Saldo}, solicitado {item.Quantidade}");
-
-                produto.Saldo -= item.Quantidade;
-                produto.DataAtualizacao = DateTime.UtcNow;
-            }
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
+            await _service.BaixarEstoqueAsync(request);
             return Ok();
         }
-        catch (DbUpdateConcurrencyException ex)
+        catch (ProdutoNotFoundException ex)
         {
-            _logger.LogError(ex, "Erro de concorrência ao baixar estoque");
-            return Conflict("Outro processo modificou os dados simultaneamente. Tente novamente.");
+            return NotFound(ex.Message);
+        }
+        catch (SaldoInsuficienteException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ConcurrencyException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (Exception ex)
         {

@@ -4,3 +4,7 @@ global using FaturamentoService.Data;
 global using FaturamentoService.Models;
 global using FaturamentoService.DTOs;
 global using FaturamentoService.Services;
+global using FaturamentoService.Repositories;
+global using FaturamentoService.Repositories.Interfaces;
+global using FaturamentoService.Services.Interfaces;
+global using FaturamentoService.Exceptions;

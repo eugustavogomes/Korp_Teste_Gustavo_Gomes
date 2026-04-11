@@ -1,0 +1,92 @@
+using EstoqueService.DTOs;
+using EstoqueService.Exceptions;
+using EstoqueService.Models;
+using EstoqueService.Repositories.Interfaces;
+using EstoqueService.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace EstoqueService.Services;
+
+public class ProdutoService : IProdutoService
+{
+    private readonly IProdutoRepository _repository;
+    private readonly ILogger<ProdutoService> _logger;
+
+    public ProdutoService(IProdutoRepository repository, ILogger<ProdutoService> logger)
+    {
+        _repository = repository;
+        _logger = logger;
+    }
+
+    public Task<IEnumerable<Produto>> GetAllAsync()
+        => _repository.GetAllAsync();
+
+    public Task<Produto?> GetByIdAsync(int id)
+        => _repository.GetByIdAsync(id);
+
+    public async Task<Produto> CreateAsync(Produto produto)
+    {
+        produto.DataCriacao = DateTime.UtcNow;
+        await _repository.AddAsync(produto);
+        await _repository.SaveChangesAsync();
+        return produto;
+    }
+
+    public async Task UpdateAsync(int id, Produto produto)
+    {
+        if (!await _repository.ExistsAsync(id))
+            throw new ProdutoNotFoundException(id);
+
+        produto.DataAtualizacao = DateTime.UtcNow;
+        _repository.Update(produto);
+
+        try
+        {
+            await _repository.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConcurrencyException();
+        }
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var produto = await _repository.GetByIdAsync(id);
+        if (produto == null)
+            throw new ProdutoNotFoundException(id);
+
+        _repository.Remove(produto);
+        await _repository.SaveChangesAsync();
+    }
+
+    public async Task BaixarEstoqueAsync(BaixaEstoqueRequest request)
+    {
+        await using var transaction = await _repository.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var item in request.Itens)
+            {
+                var produto = await _repository.GetByIdAsync(item.ProdutoId);
+
+                if (produto == null)
+                    throw new ProdutoNotFoundException(item.ProdutoId);
+
+                if (produto.Saldo < item.Quantidade)
+                    throw new SaldoInsuficienteException(produto.Descricao, produto.Saldo, item.Quantidade);
+
+                produto.Saldo -= item.Quantidade;
+                produto.DataAtualizacao = DateTime.UtcNow;
+            }
+
+            await _repository.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            _logger.LogError("Erro de concorrência ao baixar estoque");
+            throw new ConcurrencyException();
+        }
+    }
+}
