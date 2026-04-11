@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FaturamentoService.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/notas-fiscais")]
 public class NotasFiscaisController : ControllerBase
 {
     private readonly INotaFiscalService _service;

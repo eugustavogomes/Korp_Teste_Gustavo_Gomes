@@ -22,12 +22,22 @@
 .item-row {
   display: flex;
   align-items: flex-start;
-  gap: $spacing-sm;
+  gap: $spacing-md;
 }
 
-.field-qty  { width: 120px; flex-shrink: 0; }
-.field-price { width: 180px; flex-shrink: 0; }
-.btn-add    { flex-shrink: 0; align-self: flex-start; }
+.field-qty {
+  display: block;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.field-price {
+  display: block;
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.btn-add { flex-shrink: 0; align-self: flex-start; }
 
 .select-option {
   display: flex;
