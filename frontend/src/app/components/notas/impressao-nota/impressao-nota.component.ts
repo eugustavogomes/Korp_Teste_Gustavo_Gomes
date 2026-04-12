@@ -4,6 +4,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { NotaFiscal, StatusNotaFiscal } from '../../../models/nota-fiscal.model';
 import { NotaFiscalService } from '../../../services/nota-fiscal.service';
@@ -12,7 +13,7 @@ import { ApiError } from '../../../services/error-handler';
 @Component({
   selector: 'app-impressao-nota',
   standalone: true,
-  imports: [RouterLink, DatePipe, DecimalPipe, ButtonModule, CardModule, TagModule],
+  imports: [RouterLink, DatePipe, DecimalPipe, ButtonModule, CardModule, TagModule, TooltipModule],
   templateUrl: './impressao-nota.html',
   styleUrl: './impressao-nota.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

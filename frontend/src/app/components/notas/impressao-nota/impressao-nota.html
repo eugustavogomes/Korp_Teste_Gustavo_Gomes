@@ -15,6 +15,9 @@
 @if (nota) {
   <div class="page-header">
     <div class="page-title">
+      <a routerLink="/notas" class="back-btn" pTooltip="Voltar para Notas Fiscais">
+        <i class="pi pi-arrow-circle-left"></i>
+      </a>
       <h2>Nota Fiscal</h2>
       <p-tag
         [value]="nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada'"
@@ -22,13 +25,6 @@
       />
     </div>
     <div class="header-actions">
-      <p-button
-        label="Voltar"
-        icon="pi pi-arrow-left"
-        [outlined]="true"
-        severity="secondary"
-        routerLink="/notas"
-      />
       @if (nota.status === StatusNotaFiscal.Aberta) {
         <p-button
           [label]="processando ? 'Processando...' : 'Imprimir'"
@@ -36,7 +32,6 @@
           [disabled]="processando"
           (onClick)="imprimir()"
         />
-      } @else {
       }
     </div>
   </div>
