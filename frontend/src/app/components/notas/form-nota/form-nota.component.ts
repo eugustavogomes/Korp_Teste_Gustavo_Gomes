@@ -10,7 +10,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProdutoService } from '../../../services/produto.service';
-import { NotaFiscalService } from '../../../services/nota-fiscal';
+import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { Produto } from '../../../models/produto.model';
 
 interface ItemForm {
@@ -22,8 +22,8 @@ interface ItemForm {
 @Component({
   selector: 'app-form-nota',
   imports: [FormsModule, DecimalPipe, ButtonModule, SelectModule, InputNumberModule, InputTextModule, TableModule, TooltipModule],
-  templateUrl: './form-nota.html',
-  styleUrl: './form-nota.scss',
+  templateUrl: './form-nota.component.html',
+  styleUrl: './form-nota.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormNota implements OnInit {

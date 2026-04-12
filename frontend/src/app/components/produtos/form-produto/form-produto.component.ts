@@ -12,25 +12,22 @@ import { Produto } from '../../../models/produto.model';
 @Component({
   selector: 'app-form-produto',
   imports: [FormsModule, ButtonModule, InputTextModule, InputNumberModule],
-  templateUrl: './form-produto.html',
-  styleUrl: './form-produto.scss',
+  templateUrl: './form-produto.component.html',
+  styleUrl: './form-produto.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormProduto implements OnInit {
-  private ref    = inject<DynamicDialogRef>(DynamicDialogRef,       { optional: true });
-  private config = inject<DynamicDialogConfig>(DynamicDialogConfig, { optional: true });
+  private ref            = inject<DynamicDialogRef>(DynamicDialogRef,       { optional: true });
+  private config         = inject<DynamicDialogConfig>(DynamicDialogConfig, { optional: true });
+  private route          = inject(ActivatedRoute);
+  private router         = inject(Router);
+  private produtoService = inject(ProdutoService);
+  private cdr            = inject(ChangeDetectorRef);
 
   produto: Partial<Produto> = { codigo: '', descricao: '', saldo: 0 };
   editando = false;
   salvando = false;
   erro: string | null = null;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private produtoService: ProdutoService,
-    private cdr: ChangeDetectorRef
-  ) {}
 
   ngOnInit(): void {
     const id = this.config?.data?.id ?? this.route.snapshot.params['id'];

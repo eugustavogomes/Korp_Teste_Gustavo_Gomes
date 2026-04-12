@@ -8,14 +8,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ProdutoService } from '../../../services/produto.service';
 import { Produto } from '../../../models/produto.model';
-import { FormProduto } from '../form-produto/form-produto';
+import { FormProduto } from '../form-produto/form-produto.component';
 
 @Component({
   selector: 'app-lista-produtos',
   imports: [TableModule, ButtonModule, CardModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
   providers: [ConfirmationService],
-  templateUrl: './lista-produtos.html',
-  styleUrl: './lista-produtos.scss',
+  templateUrl: './lista-produtos.component.html',
+  styleUrl: './lista-produtos.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaProdutos {

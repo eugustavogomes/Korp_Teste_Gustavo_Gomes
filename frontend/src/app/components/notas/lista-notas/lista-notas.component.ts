@@ -9,16 +9,16 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { NotaFiscalService } from '../../../services/nota-fiscal';
+import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { StatusNotaFiscal } from '../../../models/nota-fiscal.model';
-import { FormNota } from '../form-nota/form-nota';
+import { FormNota } from '../form-nota/form-nota.component';
 
 @Component({
   selector: 'app-lista-notas',
   imports: [RouterLink, DatePipe, DecimalPipe, TableModule, ButtonModule, CardModule, TagModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
   providers: [ConfirmationService],
-  templateUrl: './lista-notas.html',
-  styleUrl: './lista-notas.scss',
+  templateUrl: './lista-notas.component.html',
+  styleUrl: './lista-notas.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaNotas {

@@ -6,7 +6,7 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { NotaFiscal, StatusNotaFiscal } from '../../../models/nota-fiscal.model';
-import { NotaFiscalService } from '../../../services/nota-fiscal';
+import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { ApiError } from '../../../services/error-handler';
 
 @Component({

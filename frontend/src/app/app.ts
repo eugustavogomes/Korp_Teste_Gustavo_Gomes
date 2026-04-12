@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { ProdutoService } from './services/produto.service';
-import { NotaFiscalService } from './services/nota-fiscal';
+import { NotaFiscalService } from './services/nota-fiscal.service';
 
 @Component({
   selector: 'app-root',
