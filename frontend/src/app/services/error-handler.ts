@@ -43,7 +43,7 @@ function mapearErro(error: unknown): ApiError {
     };
   }
 
-  if (error.status === 400) {
+  if (error.status === 400 || error.status === 422) {
     return {
       mensagem: error.error?.mensagem ?? 'Requisição inválida.',
       tipo: 'negocio',

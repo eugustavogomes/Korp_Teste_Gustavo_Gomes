@@ -71,6 +71,11 @@ public class NotasFiscaisController : ControllerBase
             _logger.LogWarning("EstoqueService rejeitou a baixa para nota {Id}: {Mensagem}", id, ex.Message);
             return BadRequest(new { mensagem = ex.Message });
         }
+        catch (EstoqueException ex) when (ex.StatusCode == 404)
+        {
+            _logger.LogWarning("Produto não encontrado no estoque ao imprimir nota {Id}: {Mensagem}", id, ex.Message);
+            return UnprocessableEntity(new { mensagem = "Um ou mais produtos desta nota foram removidos do cadastro e não podem ter o estoque baixado. Cancele a nota ou entre em contato com o administrador." });
+        }
         catch (EstoqueException ex)
         {
             _logger.LogError("EstoqueService retornou {Status} para nota {Id}: {Mensagem}", ex.StatusCode, id, ex.Message);
