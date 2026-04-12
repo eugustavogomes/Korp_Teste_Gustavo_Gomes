@@ -6,17 +6,30 @@
 
 <form #form="ngForm" class="product-form">
 
-  <div class="field">
-    <label for="codigo">Código</label>
-    <input
-      pInputText
-      id="codigo"
-      [(ngModel)]="produto.codigo"
-      name="codigo"
-      required
-      placeholder="Ex: PROD-001"
-      class="w-full"
-    />
+  <div class="field-row">
+    <div class="field">
+      <label for="codigo">Código</label>
+      <input
+        pInputText
+        id="codigo"
+        [(ngModel)]="produto.codigo"
+        name="codigo"
+        required
+        placeholder="Ex: PROD-001"
+        class="w-full"
+      />
+    </div>
+
+    <div class="field field--saldo">
+      <label for="saldo">Itens em Estoque</label>
+      <p-inputnumber
+        inputId="saldo"
+        [(ngModel)]="produto.saldo"
+        name="saldo"
+        [min]="0"
+        class="w-full"
+      />
+    </div>
   </div>
 
   <div class="field">
@@ -32,21 +45,15 @@
     />
   </div>
 
-  <div class="field">
-    <label for="saldo">Saldo em Estoque</label>
-    <p-inputnumber
-      inputId="saldo"
-      [(ngModel)]="produto.saldo"
-      name="saldo"
-      [min]="0"
-      class="w-full"
-    />
-  </div>
-
 </form>
 
 <div class="dialog-footer">
-  <p-button label="Cancelar" [text]="true" severity="secondary" (onClick)="cancelar()" />
+  <p-button
+    label="Cancelar"
+    [outlined]="true"
+    severity="secondary"
+    (onClick)="cancelar()"
+  />
   <p-button
     [label]="salvando ? 'Salvando...' : 'Salvar'"
     icon="pi pi-check"

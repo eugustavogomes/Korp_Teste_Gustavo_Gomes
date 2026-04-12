@@ -15,29 +15,46 @@
   gap: $spacing-sm;
 }
 
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+}
+
 .field-produto {
   width: 100%;
 }
 
 .item-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end; // botão alinha na base dos campos
   gap: $spacing-sm;
 }
 
 .field-qty {
-  width: 100px;
+  width: 110px;
   flex-shrink: 0;
+
+  p-inputnumber { width: 100%; }
 }
 
 .field-price {
   flex: 1;
   min-width: 140px;
+
+  input { width: 100%; }
 }
 
 .btn-add {
   flex-shrink: 0;
   white-space: nowrap;
+  padding-bottom: 1px; // ajuste óptico para alinhar com a base dos inputs
 }
 
 .select-option {

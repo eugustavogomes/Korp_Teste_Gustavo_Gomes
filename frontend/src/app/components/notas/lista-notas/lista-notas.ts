@@ -39,6 +39,7 @@ export class ListaNotas {
       width: '720px',
       modal: true,
       closable: true,
+      dismissableMask: true,
     });
     ref!.onClose.subscribe((salvo: boolean) => {
       if (salvo) this.notaService.carregar();

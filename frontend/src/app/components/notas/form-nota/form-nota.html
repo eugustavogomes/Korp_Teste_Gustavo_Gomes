@@ -4,45 +4,54 @@
   </div>
 }
 
-<p class="section-label">ADICIONAR ITEM</p>
 
 <div class="item-form">
-  <p-select
-    [options]="produtos()"
-    [(ngModel)]="produtoSelecionado"
-    optionLabel="descricao"
-    placeholder="Selecionar produto..."
-    class="field-produto"
-    [filter]="true"
-    filterBy="descricao,codigo"
-  >
-    <ng-template #selectedItem let-p>
-      <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
-    </ng-template>
-    <ng-template #item let-p>
-      <div class="select-option">
+  <div class="field-group">
+    <label class="field-label">Produto</label>
+    <p-select
+      [options]="produtos()"
+      [(ngModel)]="produtoSelecionado"
+      optionLabel="descricao"
+      placeholder="Selecionar produto..."
+      class="field-produto"
+      [filter]="true"
+      filterBy="descricao,codigo"
+    >
+      <ng-template #selectedItem let-p>
         <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
-        <span class="saldo-hint">saldo: {{ p.saldo }}</span>
-      </div>
-    </ng-template>
-  </p-select>
+      </ng-template>
+      <ng-template #item let-p>
+        <div class="select-option">
+          <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
+          <span class="saldo-hint">saldo: {{ p.saldo }}</span>
+        </div>
+      </ng-template>
+    </p-select>
+  </div>
 
   <div class="item-row">
-    <p-inputnumber
-      [(ngModel)]="quantidade"
-      [min]="1"
-      placeholder="Qtd"
-      class="field-qty"
-    />
-    <p-inputnumber
-      [(ngModel)]="precoUnitario"
-      mode="currency"
-      currency="BRL"
-      locale="pt-BR"
-      [min]="0.01"
-      placeholder="Preço"
-      class="field-price"
-    />
+    <div class="field-group field-qty">
+      <label class="field-label">Quantidade</label>
+      <p-inputnumber
+        [(ngModel)]="quantidade"
+        [min]="1"
+        placeholder="1"
+      />
+    </div>
+
+    <div class="field-group field-price">
+      <label class="field-label">Valor unitário</label>
+      <input
+        pInputText
+        type="text"
+        inputmode="numeric"
+        [value]="precoDisplay"
+        (input)="onPrecoInput($event)"
+        placeholder="R$ 0,00"
+        autocomplete="off"
+      />
+    </div>
+
     <p-button
       label="Adicionar"
       icon="pi pi-plus"

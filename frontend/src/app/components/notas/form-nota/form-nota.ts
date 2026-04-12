@@ -5,6 +5,7 @@ import { DecimalPipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -20,7 +21,7 @@ interface ItemForm {
 
 @Component({
   selector: 'app-form-nota',
-  imports: [FormsModule, DecimalPipe, ButtonModule, SelectModule, InputNumberModule, TableModule, TooltipModule],
+  imports: [FormsModule, DecimalPipe, ButtonModule, SelectModule, InputNumberModule, InputTextModule, TableModule, TooltipModule],
   templateUrl: './form-nota.html',
   styleUrl: './form-nota.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +38,7 @@ export class FormNota implements OnInit {
   produtoSelecionado: Produto | null = null;
   quantidade = 1;
   precoUnitario = 0;
+  precoDisplay = '';
   salvando = false;
   erro: string | null = null;
 
@@ -50,6 +52,26 @@ export class FormNota implements OnInit {
     return this.itens.reduce((s, i) => s + i.quantidade * i.precoUnitario, 0);
   }
 
+  onPrecoInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '');
+    if (!digits) {
+      this.precoUnitario = 0;
+      this.precoDisplay = '';
+      input.value = '';
+      return;
+    }
+    this.precoUnitario = Number(digits) / 100;
+    this.precoDisplay = this.precoUnitario.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    input.value = this.precoDisplay;
+    // mantém cursor no fim
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  }
+
   adicionarItem(): void {
     if (!this.produtoSelecionado || this.quantidade <= 0 || this.precoUnitario <= 0) return;
     this.itens = [
@@ -59,6 +81,7 @@ export class FormNota implements OnInit {
     this.produtoSelecionado = null;
     this.quantidade = 1;
     this.precoUnitario = 0;
+    this.precoDisplay = '';
   }
 
   removerItem(index: number): void {

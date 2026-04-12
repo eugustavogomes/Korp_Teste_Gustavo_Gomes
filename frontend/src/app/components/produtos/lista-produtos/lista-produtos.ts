@@ -32,8 +32,10 @@ export class ListaProdutos {
     this.erro = null;
     const ref = this.dialogService.open(FormProduto, {
       header: 'Novo Produto',
-      width: '480px',
+      width: '560px',
       modal: true,
+      closable: true,
+      dismissableMask: true,
     });
     ref!.onClose.subscribe((salvo: boolean) => {
       if (salvo) this.produtoService.carregar();
@@ -44,8 +46,10 @@ export class ListaProdutos {
     this.erro = null;
     const ref = this.dialogService.open(FormProduto, {
       header: 'Editar Produto',
-      width: '480px',
+      width: '560px',
       modal: true,
+      closable: true,
+      dismissableMask: true,
       data: { id: produto.id },
     });
     ref!.onClose.subscribe((salvo: boolean) => {
