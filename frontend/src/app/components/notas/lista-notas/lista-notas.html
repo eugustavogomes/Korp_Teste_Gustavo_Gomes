@@ -6,9 +6,9 @@
 </div>
 
 @if (erro) {
-  <div class="error-message">
-    <i class="pi pi-exclamation-circle"></i> {{ erro }}
-  </div>
+<div class="error-message">
+  <i class="pi pi-exclamation-circle"></i> {{ erro }}
+</div>
 }
 
 <p-card>
@@ -19,9 +19,8 @@
         <th>Número</th>
         <th>Data Emissão</th>
         <th>Status</th>
-        <th class="text-center">Total</th>
+        <th>Total</th>
         <th>Ações</th>
-        <th></th>
       </tr>
     </ng-template>
 
@@ -30,30 +29,15 @@
         <td><strong>{{ n.numero }}</strong></td>
         <td>{{ n.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</td>
         <td>
-          <p-tag
-            [value]="labelStatus(n.status)"
-            [severity]="severityStatus(n.status)"
-          />
+          <p-tag [value]="labelStatus(n.status)" [severity]="severityStatus(n.status)" />
         </td>
-        <td class="text-center font-medium">R$ {{ n.total | number: '1.2-2' }}</td>
-        <td class="text-right">
-          <p-button
-            icon="pi pi-print"
-            [text]="true"
-            [rounded]="true"
-            severity="secondary"
-            pTooltip="Visualizar / Imprimir"
-            [routerLink]="['/notas', n.id, 'impressao']"
-          />
+        <td class="font-medium">R$ {{ n.total | number: '1.2-2' }}</td>
+        <td>
+          <p-button icon="pi pi-print" [text]="true" [rounded]="true" severity="secondary"
+            pTooltip="Visualizar / Imprimir" [routerLink]="['/notas', n.id, 'impressao']" />
           @if (n.status === StatusNotaFiscal.Aberta) {
-            <p-button
-              icon="pi pi-times-circle"
-              [text]="true"
-              [rounded]="true"
-              severity="danger"
-              pTooltip="Cancelar nota"
-              (onClick)="cancelar(n.id)"
-            />
+          <p-button icon="pi pi-times-circle" [text]="true" [rounded]="true" severity="danger" pTooltip="Cancelar nota"
+            (onClick)="cancelar(n.id)" />
           }
         </td>
       </tr>
@@ -63,16 +47,16 @@
       <tr>
         <td colspan="5">
           @if (erroCarregamento(); as erroMsg) {
-            <div class="empty-state empty-state--error">
-              <i class="pi pi-file"></i>
-              <p class="empty-state__label">Erro ao carregar</p>
-              <p>{{ erroMsg }}</p>
-            </div>
+          <div class="empty-state empty-state--error">
+            <i class="pi pi-file"></i>
+            <p class="empty-state__label">Erro ao carregar</p>
+            <p>{{ erroMsg }}</p>
+          </div>
           } @else if (!carregando()) {
-            <div class="empty-state">
-              <i class="pi pi-file-edit"></i>
-              <p>Nenhuma nota emitida.</p>
-            </div>
+          <div class="empty-state">
+            <i class="pi pi-file-edit"></i>
+            <p>Nenhuma nota emitida.</p>
+          </div>
           }
         </td>
       </tr>

@@ -71,7 +71,7 @@ body {
 }
 
 .p-datatable .p-datatable-tbody > tr:hover > td {
-  background: $color-primary-lighter !important;
+  background: $color-primary-lighter;
 }
 
 .p-datatable .p-datatable-tbody > tr:last-child > td {
@@ -134,18 +134,6 @@ body {
 
   .p-inputtext { width: 100% !important; }
 }
-
-
-// =============================================================================
-// TABLE LOADING — centraliza o spinner no meio do conteúdo
-// =============================================================================
-
-.p-datatable-loading-overlay {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
 
 // =============================================================================
 // ERROR MESSAGE

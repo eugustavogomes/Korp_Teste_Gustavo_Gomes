@@ -31,33 +31,3 @@ $breakpoint-desktop: 1024px;
     color: $color-text-primary;
   }
 }
-
-
-// =============================================================================
-// EMPTY STATE — Estado vazio de tabelas e listagens
-// =============================================================================
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: $spacing-xxl;
-  color: $color-text-secondary;
-  gap: $spacing-sm;
-
-  i { font-size: 40px; opacity: 0.4; }
-  p { margin: 0; font-size: $font-size-sm; }
-
-  &__label {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-semibold;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    opacity: 0.6;
-  }
-
-  &--error {
-    color: $color-error;
-    i { opacity: 0.25; }
-  }
-}
