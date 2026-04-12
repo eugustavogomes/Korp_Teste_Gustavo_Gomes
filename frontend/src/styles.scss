@@ -112,24 +112,14 @@ body {
   gap: $spacing-sm !important;
 }
 
-// Confirm Dialog — layout do conteúdo (ícone + mensagem)
 .p-confirmdialog .p-dialog-content {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: $spacing-md !important;
-  padding: $spacing-lg !important;
-
-  .p-confirmdialog-icon {
-    font-size: 28px !important;
-    color: $color-error !important;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
+  padding: $spacing-lg $spacing-lg $spacing-md !important;
 
   .p-confirmdialog-message {
     font-size: $font-size-sm !important;
-    color: $color-text-primary !important;
-    line-height: 1.6 !important;
+    color: $color-text-secondary !important;
+    line-height: 1.7 !important;
+    display: block;
   }
 }
 

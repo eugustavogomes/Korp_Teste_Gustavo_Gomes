@@ -50,7 +50,6 @@ export class ListaNotas {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja cancelar esta nota fiscal? Esta ação não pode ser desfeita.',
       header: 'Confirmar cancelamento',
-      icon: 'pi pi-times-circle',
       acceptLabel: 'Cancelar nota',
       rejectLabel: 'Voltar',
       acceptButtonStyleClass: 'p-button-danger',
@@ -64,8 +63,8 @@ export class ListaNotas {
     });
   }
 
-  severityStatus(status: StatusNotaFiscal): 'info' | 'secondary' {
-    return status === StatusNotaFiscal.Aberta ? 'info' : 'secondary';
+  severityStatus(status: StatusNotaFiscal): 'success' | 'secondary' {
+    return status === StatusNotaFiscal.Aberta ? 'success' : 'secondary';
   }
 
   labelStatus(status: StatusNotaFiscal): string {

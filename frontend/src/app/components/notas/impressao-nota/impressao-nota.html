@@ -14,7 +14,13 @@
 
 @if (nota) {
   <div class="page-header">
-    <h2>Nota Fiscal</h2>
+    <div class="page-title">
+      <h2>Nota Fiscal</h2>
+      <p-tag
+        [value]="nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada'"
+        [severity]="nota.status === StatusNotaFiscal.Aberta ? 'success' : 'secondary'"
+      />
+    </div>
     <div class="header-actions">
       <p-button
         label="Voltar"
@@ -31,9 +37,6 @@
           (onClick)="imprimir()"
         />
       } @else {
-        <span class="nota-fechada-hint">
-          <i class="pi pi-lock"></i> Nota fechada — impressão não permitida
-        </span>
       }
     </div>
   </div>
@@ -47,13 +50,6 @@
       <div class="info-item">
         <span class="info-label">Data de Emissão</span>
         <span class="info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</span>
-      </div>
-      <div class="info-item">
-        <span class="info-label">Status</span>
-        <p-tag
-          [value]="nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada'"
-          [severity]="nota.status === StatusNotaFiscal.Aberta ? 'info' : 'secondary'"
-        />
       </div>
     </div>
   </p-card>
@@ -80,10 +76,6 @@
         }
       </tbody>
       <tfoot>
-        <tr class="total-row">
-          <td colspan="3" class="text-right">Total</td>
-          <td class="text-right total-value">R$ {{ nota.total | number: '1.2-2' }}</td>
-        </tr>
       </tfoot>
     </table>
   </p-card>
