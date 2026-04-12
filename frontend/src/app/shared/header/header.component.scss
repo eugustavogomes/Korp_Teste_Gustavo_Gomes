@@ -41,6 +41,7 @@
   display: flex;
   align-items: center;
   gap: $spacing-xs;
+  grid-column: 2;
 }
 
 .nav-link {

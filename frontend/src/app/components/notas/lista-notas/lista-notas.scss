@@ -1,32 +1,3 @@
-@use '../../../../styles/variables' as *;
+// Estilos específicos da lista de notas.
+// .page-header h2 e .empty-state estão centralizados em _layout.scss.
 
-.page-header h2 {
-  margin: 0;
-  font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: $spacing-xxl;
-  color: $color-text-secondary;
-  gap: $spacing-sm;
-
-  i { font-size: 40px; opacity: 0.4; }
-  p { margin: 0; font-size: $font-size-sm; }
-
-  &__label {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-semibold;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    opacity: 0.6;
-  }
-
-  &--error {
-    i { opacity: 0.25; }
-  }
-}

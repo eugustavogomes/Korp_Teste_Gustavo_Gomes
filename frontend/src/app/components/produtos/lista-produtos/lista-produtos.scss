@@ -1,12 +1,5 @@
 @use '../../../../styles/variables' as *;
 
-.page-header h2 {
-  margin: 0;
-  font-size: $font-size-xl;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-}
-
 .codigo-badge {
   display: inline-block;
   background: $color-surface-variant;
@@ -20,20 +13,3 @@
 
 .saldo-ok   { color: $color-text-primary; font-weight: $font-weight-medium; }
 .saldo-zero { color: $color-error; font-weight: $font-weight-semibold; }
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: $spacing-xxl;
-  color: $color-text-secondary;
-  gap: $spacing-sm;
-
-  i { font-size: 40px; opacity: 0.4; }
-  p { margin: 0; font-size: $font-size-sm; }
-
-  &--error {
-    color: $color-error;
-    i { opacity: 0.5; color: $color-text-secondary; }
-  }
-}

@@ -45,31 +45,44 @@ body {
   padding: 0 !important;
 }
 
-// Table
 .p-datatable .p-datatable-thead > tr > th {
   background: $color-surface-variant !important;
   font-weight: $font-weight-semibold !important;
-  color: $color-text-primary !important;
-  font-size: $font-size-sm !important;
+  color: $color-text-secondary !important;
+  font-size: $font-size-xs !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   border-bottom: 1px solid $color-border !important;
-  padding: $spacing-md !important;
+  padding: $spacing-sm $spacing-md !important;
+  white-space: nowrap;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  transition: background-color $transition-base !important;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
-  padding: $spacing-md !important;
+  padding: $spacing-sm $spacing-md !important;
   font-size: $font-size-sm !important;
   color: $color-text-primary !important;
-  border-bottom: 1px solid #F3F4F6 !important;
+  border-bottom: 1px solid $color-surface-variant !important;
+  vertical-align: middle;
 }
 
-.p-datatable .p-datatable-tbody > tr:hover {
-  background: $color-surface !important;
+.p-datatable .p-datatable-tbody > tr:hover > td {
+  background: $color-primary-lighter !important;
 }
 
 .p-datatable .p-datatable-tbody > tr:last-child > td {
   border-bottom: none !important;
 }
-// Dialog
+
+.p-datatable .p-datatable-thead > tr > th:last-child,
+.p-datatable .p-datatable-tbody > tr > td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .p-dialog .p-dialog-header {
   background: $color-background !important;
   border-bottom: 1px solid $color-border !important;
@@ -90,10 +103,16 @@ body {
   padding: $spacing-md $spacing-lg !important;
 }
 
-// Input
 .p-inputtext,
 .p-select {
   font-size: $font-size-sm !important;
+}
+
+.p-inputnumber {
+  display: flex ;
+  width: 100% ;
+
+  .p-inputtext { width: 100% !important; }
 }
 
 
