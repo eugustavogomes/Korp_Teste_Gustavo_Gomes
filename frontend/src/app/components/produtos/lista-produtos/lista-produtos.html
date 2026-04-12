@@ -18,8 +18,8 @@
       <tr>
         <th>Código</th>
         <th>Descrição</th>
-        <th class="text-right">Saldo</th>
-        <th></th>
+        <th class="text-center">Saldo</th>
+        <th>Ações</th>
       </tr>
     </ng-template>
 
@@ -27,7 +27,7 @@
       <tr>
         <td><code class="codigo-badge">{{ p.codigo }}</code></td>
         <td><strong>{{ p.descricao }}</strong></td>
-        <td class="text-right">
+        <td class="text-center">
           <span [class]="p.saldo === 0 ? 'saldo-zero' : 'saldo-ok'">{{ p.saldo }}</span>
         </td>
         <td class="text-right">

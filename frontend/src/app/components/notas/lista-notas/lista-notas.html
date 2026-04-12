@@ -19,7 +19,8 @@
         <th>Número</th>
         <th>Data Emissão</th>
         <th>Status</th>
-        <th class="text-right">Total</th>
+        <th class="text-center">Total</th>
+        <th>Ações</th>
         <th></th>
       </tr>
     </ng-template>
@@ -34,7 +35,7 @@
             [severity]="severityStatus(n.status)"
           />
         </td>
-        <td class="text-right font-medium">R$ {{ n.total | number: '1.2-2' }}</td>
+        <td class="text-center font-medium">R$ {{ n.total | number: '1.2-2' }}</td>
         <td class="text-right">
           <p-button
             icon="pi pi-print"
