@@ -1,3 +1,27 @@
-// Estilos específicos da lista de notas.
+@use '../../../../styles/variables' as *;
+
 // .page-header h2 e .empty-state estão centralizados em _layout.scss.
+
+.itens-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.item-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px $spacing-sm;
+  background: $color-surface-variant;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $color-text-primary;
+  white-space: nowrap;
+
+  &__qty {
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+  }
+}
 
