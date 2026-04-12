@@ -56,6 +56,27 @@ body {
 
 
 // =============================================================================
+// PAGINATOR
+// =============================================================================
+
+.p-paginator {
+  .p-paginator-page {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 0 !important;
+    font-size: $font-size-xs !important;
+
+    &.p-paginator-page-selected {
+      background-color: $color-primary !important;
+      color: white !important;
+      border-color: $color-primary !important;
+      opacity: 70%;
+    }
+  }
+}
+
+
+// =============================================================================
 // ERROR MESSAGE
 // =============================================================================
 
