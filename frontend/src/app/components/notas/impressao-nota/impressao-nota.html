@@ -48,7 +48,17 @@
     </div>
     <div class="info-item">
       <span class="info-label">Data de Emissão</span>
-      <span class="info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</span>
+      <div class="info-datetime">
+        <div class="info-datetime__part">
+          <span class="info-sublabel">Data</span>
+          <span class="info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <span class="info-datetime__sep">·</span>
+        <div class="info-datetime__part">
+          <span class="info-sublabel">Hora</span>
+          <span class="info-value">{{ nota.dataEmissao | date: 'HH:mm' }}</span>
+        </div>
+      </div>
     </div>
     <div class="info-item info-item--total">
       <span class="info-label">Valor Total</span>

@@ -42,7 +42,6 @@
 
 .nota-info-grid {
   display: flex;
-  justify-content: space-between;
   padding: $spacing-lg $spacing-xl;
   background: $color-background;
   border: 1px solid $color-border;
@@ -53,6 +52,8 @@
 .info-item {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 4px;
   flex: 1;
 
@@ -62,8 +63,34 @@
   }
 
   &--total {
-    align-items: flex-end;
+    align-items: center;
   }
+}
+
+.info-datetime {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  &__part {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  &__sep {
+    color: $color-border;
+    font-size: $font-size-sm;
+    line-height: 1;
+  }
+}
+
+.info-sublabel {
+  font-size: 10px;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-secondary;
 }
 
 .info-label {
