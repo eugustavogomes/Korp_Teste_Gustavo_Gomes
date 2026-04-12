@@ -41,7 +41,7 @@
           <span [class]="p.saldo === 0 ? 'saldo-zero' : 'saldo-ok'">{{ p.saldo }}</span>
         </td>
         <td class="text-right">
-          <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" pTooltip="Editar" (onClick)="abrirEditar(p)" />
+          <p-button icon="pi pi-pen-to-square" [text]="true" [rounded]="true" severity="secondary" pTooltip="Editar" (onClick)="abrirEditar(p)" />
           <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" pTooltip="Excluir" (onClick)="excluir(p.id)" />
         </td>
       </tr>

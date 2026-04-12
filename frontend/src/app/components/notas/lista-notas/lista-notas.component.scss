@@ -1,6 +1,11 @@
 @use '../../../../styles/variables' as *;
 
 
+.row-clickable {
+  cursor: pointer;
+}
+
+
 .data-emissao {
   display: flex;
   flex-direction: column;

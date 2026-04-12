@@ -38,7 +38,7 @@
     </ng-template>
 
     <ng-template #body let-n>
-      <tr>
+      <tr class="row-clickable" [routerLink]="['/notas', n.id, 'impressao']">
         <td><strong>{{ n.numero }}</strong></td>
         <td>
           <div class="data-emissao">
@@ -61,11 +61,11 @@
         </td>
         <td class="font-medium">R$ {{ n.total | number: '1.2-2' }}</td>
         <td>
-          <p-button icon="pi pi-print" [text]="true" [rounded]="true" severity="secondary"
-            pTooltip="Visualizar / Imprimir" [routerLink]="['/notas', n.id, 'impressao']" />
+          <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+            pTooltip="Visualizar / Imprimir" [routerLink]="['/notas', n.id, 'impressao']" (click)="$event.stopPropagation()" />
           @if (n.status === StatusNotaFiscal.Aberta) {
           <p-button icon="pi pi-times-circle" [text]="true" [rounded]="true" severity="danger" pTooltip="Cancelar nota"
-            (onClick)="cancelar(n.id)" />
+            (onClick)="cancelar(n.id)" (click)="$event.stopPropagation()" />
           }
         </td>
       </tr>
