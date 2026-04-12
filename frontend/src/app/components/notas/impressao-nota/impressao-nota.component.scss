@@ -1,5 +1,9 @@
 @use '../../../../styles/variables' as *;
 
+// =============================================================================
+// INTERFACE — Estilos da tela (não impressos)
+// =============================================================================
+
 .page-title {
   display: flex;
   align-items: center;
@@ -39,16 +43,6 @@
   gap: $spacing-sm;
 }
 
-.nota-fechada-hint {
-  display: flex;
-  align-items: center;
-  gap: $spacing-xs;
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
-
-  i { font-size: 14px; }
-}
-
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -60,60 +54,99 @@
   i { font-size: 32px; }
 }
 
-.nota-info-grid {
+.confirm-banner {
   display: flex;
-  padding: $spacing-lg $spacing-xl;
-  background: $color-background;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-lg;
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+
+    i {
+      color: #D97706;
+      font-size: 18px;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+
+    > strong { display: block; margin-bottom: 2px; }
+    p { margin: 0; font-size: $font-size-sm; color: $color-text-secondary; }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+    flex-shrink: 0;
+  }
+}
+
+
+// =============================================================================
+// DOCUMENTO — Estrutura do documento fiscal (tela + print)
+// =============================================================================
+
+.nf-documento {
+  background: white;
   border: 1px solid $color-border;
   border-radius: $radius-lg;
+  padding: $spacing-xl $spacing-xl $spacing-lg;
   box-shadow: $shadow-1;
 }
 
-.info-item {
+.nf-doc-header {
+  display: none;
+  text-align: center;
+  padding-bottom: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border-bottom: 0.5px solid #666666;
+
+  &__title {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    letter-spacing: 0.1em;
+  }
+
+  &__system {
+    font-size: $font-size-sm;
+    color: #555;
+    margin-top: 4px;
+  }
+}
+
+.nf-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+  margin-bottom: $spacing-lg;
+}
+
+.nf-info-item {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: 4px;
-  flex: 1;
+  padding: $spacing-md $spacing-lg;
 
   & + & {
-    padding-left: $spacing-xl;
     border-left: 1px solid $color-border;
   }
 
   &--total {
-    align-items: center;
+    background: #F8FAFF;
   }
 }
 
-.info-datetime {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-
-  &__part {
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-  }
-
-  &__sep {
-    color: $color-border;
-    font-size: $font-size-sm;
-    line-height: 1;
-  }
-}
-
-.info-sublabel {
-  font-size: 10px;
-  font-weight: $font-weight-semibold;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: $color-text-secondary;
-}
-
-.info-label {
+.nf-info-label {
   font-size: 10px;
   font-weight: $font-weight-semibold;
   text-transform: uppercase;
@@ -121,7 +154,7 @@
   color: $color-text-secondary;
 }
 
-.info-value {
+.nf-info-value {
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
@@ -133,20 +166,38 @@
   }
 }
 
-.card-title {
-  font-size: $font-size-md;
-  font-weight: $font-weight-semibold;
-  color: $color-text-primary;
-  padding: $spacing-md $spacing-lg;
-  border-bottom: 1px solid $color-border;
+.nf-info-time {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
+  color: $color-text-secondary;
 }
 
-.itens-table {
+.nf-itens-section {
+  margin-top: $spacing-md;
+}
+
+.nf-itens-title {
+  font-size: 10px;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-text-secondary;
+  padding-bottom: $spacing-sm;
+  margin-bottom: 0;
+}
+
+// Tabela de itens
+.nf-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+
+  th, td {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+  }
 
   th {
-    padding: $spacing-sm $spacing-lg;
     text-align: left;
     font-size: $font-size-xs;
     font-weight: $font-weight-semibold;
@@ -154,14 +205,11 @@
     letter-spacing: 0.04em;
     color: $color-text-secondary;
     background: $color-surface-variant;
+    border-top: 1px solid $color-border;
     border-bottom: 1px solid $color-border;
-    position: sticky;
-    top: 0;
   }
 
   td {
-    padding: $spacing-sm $spacing-lg;
-    font-size: $font-size-sm;
     color: $color-text-primary;
     border-bottom: 1px solid #F3F4F6;
   }
@@ -170,20 +218,109 @@
     border-bottom: none;
   }
 
-  tfoot .total-row td {
+  .col-produto  { width: 50%; }
+  .col-qty      { width: 10%; text-align: center; }
+  .col-preco    { width: 20%; text-align: right; }
+  .col-subtotal { width: 20%; text-align: right; }
+
+  .total-row td {
     border-top: 2px solid $color-border;
     border-bottom: none;
     padding-top: $spacing-md;
+    background: #F8FAFF;
+  }
+
+  .total-label {
+    text-align: right;
+    font-size: $font-size-xs;
     font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $color-text-secondary;
   }
 
   .total-value {
-    font-size: $font-size-xl;
+    font-size: $font-size-lg;
     font-weight: $font-weight-bold;
     color: $color-primary;
   }
 }
 
+// Rodapé do documento (só no print)
+.nf-doc-footer {
+  display: none;
+  text-align: center;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-md;
+  border-top: 1px solid $color-border;
+  font-size: $font-size-xs;
+  color: #888;
+}
+
+// Faixa de cópia (só no print, só quando Fechada)
+.nf-copia-banner {
+  display: none;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: $radius-sm;
+  padding: 6px $spacing-lg;
+  margin-bottom: $spacing-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+
+// =============================================================================
+// PRINT — Ajustes de impressão
+// =============================================================================
+
 @media print {
   :host { display: block; }
+
+  .print-only { display: block !important; }
+
+  .nf-documento {
+    border: none;
+    box-shadow: none;
+    padding: 8mm 10mm;
+    border-radius: 0;
+  }
+
+  .nf-doc-header  { display: block; }
+  .nf-doc-footer  { display: block; }
+  .nf-copia-banner { display: block; }
+
+  .nf-info-grid {
+    border: 1px solid #ccc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .nf-info-item--total {
+    background: #f0f4ff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .nf-table {
+    th {
+      background: #f5f5f5 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .total-row td {
+      background: #f0f4ff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  @page {
+    margin: 20mm 15mm;
+    size: A4;
+  }
 }

@@ -74,6 +74,17 @@ export class FormNota implements OnInit {
 
   adicionarItem(): void {
     if (!this.produtoSelecionado || this.quantidade <= 0 || this.precoUnitario <= 0) return;
+
+    const jaAdicionado = this.itens
+      .filter(i => i.produto.id === this.produtoSelecionado!.id)
+      .reduce((total, i) => total + i.quantidade, 0);
+
+    if (jaAdicionado + this.quantidade > this.produtoSelecionado.saldo) {
+      this.erro = `Saldo insuficiente para "${this.produtoSelecionado.descricao}". Disponível: ${this.produtoSelecionado.saldo - jaAdicionado}`;
+      return;
+    }
+
+    this.erro = null;
     this.itens = [
       ...this.itens,
       { produto: this.produtoSelecionado, quantidade: this.quantidade, precoUnitario: this.precoUnitario },

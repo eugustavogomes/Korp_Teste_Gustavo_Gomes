@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -8,12 +8,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { NotaFiscal, StatusNotaFiscal } from '../../../models/nota-fiscal.model';
 import { NotaFiscalService } from '../../../services/nota-fiscal.service';
+import { ProdutoService } from '../../../services/produto.service';
 import { ApiError } from '../../../services/error-handler';
 
 @Component({
   selector: 'app-impressao-nota',
   standalone: true,
-  imports: [RouterLink, DatePipe, DecimalPipe, ButtonModule, CardModule, TagModule, TooltipModule],
+  imports: [RouterLink, DatePipe, CurrencyPipe, ButtonModule, CardModule, TagModule, TooltipModule],
   templateUrl: './impressao-nota.html',
   styleUrl: './impressao-nota.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,12 +24,14 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
 
   nota: NotaFiscal | null = null;
   processando = false;
+  confirmando = false;
   erro: ApiError | null = null;
   StatusNotaFiscal = StatusNotaFiscal;
 
   constructor(
     private route: ActivatedRoute,
     private notaService: NotaFiscalService,
+    private produtoService: ProdutoService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -53,6 +56,16 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
       });
   }
 
+  confirmarImpressao(): void {
+    this.confirmando = true;
+    this.cdr.markForCheck();
+  }
+
+  cancelarConfirmacao(): void {
+    this.confirmando = false;
+    this.cdr.markForCheck();
+  }
+
   imprimir(): void {
     if (!this.nota || this.nota.status !== StatusNotaFiscal.Aberta) return;
     this.processando = true;
@@ -62,10 +75,15 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
-          this.nota!.status = StatusNotaFiscal.Fechada;
           this.processando = false;
-          this.cdr.markForCheck();
-          setTimeout(() => window.print(), 100);
+          this.confirmando = false;
+          this.produtoService.carregar();
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            window.print(); 
+            this.nota!.status = StatusNotaFiscal.Fechada;
+            this.cdr.detectChanges();
+          }, 100);
         },
         error: (err: ApiError) => {
           this.erro = err;
@@ -73,5 +91,9 @@ export class ImpressaoNotaComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  reimprimir(): void {
+    window.print();
   }
 }

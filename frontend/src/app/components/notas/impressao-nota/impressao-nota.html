@@ -1,19 +1,19 @@
 @if (processando && !nota) {
-  <div class="loading-state">
+  <div class="loading-state print-hidden">
     <i class="pi pi-spin pi-spinner"></i>
     <p>Carregando nota...</p>
   </div>
 }
 
 @if (erro) {
-  <div class="error-message">
+  <div class="error-message print-hidden">
     <i class="pi pi-exclamation-circle"></i>
     {{ erro.mensagem }}
   </div>
 }
 
 @if (nota) {
-  <div class="page-header">
+  <div class="page-header print-hidden">
     <div class="page-title">
       <a routerLink="/notas" class="back-btn" pTooltip="Voltar para Notas Fiscais">
         <i class="pi pi-arrow-circle-left"></i>
@@ -27,63 +27,113 @@
     <div class="header-actions">
       @if (nota.status === StatusNotaFiscal.Aberta) {
         <p-button
-          [label]="processando ? 'Processando...' : 'Imprimir'"
-          [icon]="processando ? 'pi pi-spin pi-spinner' : 'pi pi-print'"
+          label="Imprimir"
+          icon="pi pi-print"
           [disabled]="processando"
-          (onClick)="imprimir()"
+          (onClick)="confirmarImpressao()"
+        />
+      } @else {
+        <p-button
+          label="Reimprimir"
+          icon="pi pi-print"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="reimprimir()"
         />
       }
     </div>
   </div>
 
-  <div class="nota-info-grid mb-lg">
-    <div class="info-item">
-      <span class="info-label">Número</span>
-      <span class="info-value">{{ nota.numero }}</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Data de Emissão</span>
-      <div class="info-datetime">
-        <div class="info-datetime__part">
-          <span class="info-sublabel">Data</span>
-          <span class="info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy' }}</span>
-        </div>
-        <span class="info-datetime__sep">·</span>
-        <div class="info-datetime__part">
-          <span class="info-sublabel">Hora</span>
-          <span class="info-value">{{ nota.dataEmissao | date: 'HH:mm' }}</span>
+  @if (confirmando) {
+    <div class="confirm-banner print-hidden">
+      <div class="confirm-banner__content">
+        <i class="pi pi-exclamation-triangle"></i>
+        <div>
+          <strong>Confirmar impressão?</strong>
+          <p>Ao imprimir, a nota será marcada como <strong>Fechada</strong> e não poderá ser editada.</p>
         </div>
       </div>
+      <div class="confirm-banner__actions">
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelarConfirmacao()" />
+        <p-button
+          [label]="processando ? 'Processando...' : 'Confirmar e Imprimir'"
+          [icon]="processando ? 'pi pi-spin pi-spinner' : 'pi pi-print'"
+          [disabled]="processando"
+          (onClick)="imprimir()"
+        />
+      </div>
     </div>
-    <div class="info-item info-item--total">
-      <span class="info-label">Valor Total</span>
-      <span class="info-value info-value--total">R$ {{ nota.total | number: '1.2-2' }}</span>
-    </div>
-  </div>
+  }
 
-  <p-card>
-    <div class="card-title">Itens da Nota</div>
-    <table class="itens-table">
-      <thead>
-        <tr>
-          <th>Produto</th>
-          <th class="text-right">Qtd</th>
-          <th class="text-right">Preço Un.</th>
-          <th class="text-right">Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of nota.itens; track item.id) {
+  <!-- Documento fiscal (visível na tela e no print) -->
+  <div class="nf-documento">
+
+    <!-- Cabeçalho do documento (apenas no print) -->
+    <div class="nf-doc-header print-only">
+      <div class="nf-doc-header__title">NOTA FISCAL</div>
+      <div class="nf-doc-header__system">NF Sistema</div>
+    </div>
+
+    <!-- Faixa de cópia (apenas no print, apenas quando Fechada) -->
+    @if (nota.status === StatusNotaFiscal.Fechada) {
+      <div class="nf-copia-banner print-only">— 2ª via / cópia —</div>
+    }
+
+    <!-- Bloco de informações -->
+    <div class="nf-info-grid">
+      <div class="nf-info-item">
+        <span class="nf-info-label">Número</span>
+        <span class="nf-info-value">{{ nota.numero }}</span>
+      </div>
+      <div class="nf-info-item">
+        <span class="nf-info-label">Emissão</span>
+        <span class="nf-info-value">{{ nota.dataEmissao | date: 'dd/MM/yyyy' }} <span class="nf-info-time">{{ nota.dataEmissao | date: 'HH:mm' }}</span></span>
+      </div>
+      <div class="nf-info-item">
+        <span class="nf-info-label">Status</span>
+        <span class="nf-info-value">{{ nota.status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada' }}</span>
+      </div>
+      <div class="nf-info-item nf-info-item--total">
+        <span class="nf-info-label">Valor Total</span>
+        <span class="nf-info-value nf-info-value--total">{{ nota.total | currency: 'BRL' : 'symbol' : '1.2-2' }}</span>
+      </div>
+    </div>
+
+    <!-- Tabela de itens -->
+    <div class="nf-itens-section">
+      <div class="nf-itens-title">ITENS DA NOTA</div>
+      <table class="nf-table">
+        <thead>
           <tr>
-            <td>{{ item.descricao }}</td>
-            <td class="text-right">{{ item.quantidade }}</td>
-            <td class="text-right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
-            <td class="text-right">R$ {{ item.subtotal | number: '1.2-2' }}</td>
+            <th class="col-produto">Produto</th>
+            <th class="col-qty">Qtd</th>
+            <th class="col-preco">Preço Un.</th>
+            <th class="col-subtotal">Subtotal</th>
           </tr>
-        }
-      </tbody>
-      <tfoot>
-      </tfoot>
-    </table>
-  </p-card>
+        </thead>
+        <tbody>
+          @for (item of nota.itens; track item.id) {
+            <tr>
+              <td class="col-produto">{{ item.descricao }}</td>
+              <td class="col-qty">{{ item.quantidade }}</td>
+              <td class="col-preco">{{ item.precoUnitario | currency: 'BRL' : 'symbol' : '1.2-2' }}</td>
+              <td class="col-subtotal">{{ item.subtotal | currency: 'BRL' : 'symbol' : '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="3" class="total-label">Total geral</td>
+            <td class="col-subtotal total-value">{{ nota.total | currency: 'BRL' : 'symbol' : '1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Rodapé do documento (apenas no print) -->
+    <div class="nf-doc-footer print-only">
+      <span>Documento gerado em {{ nota.dataEmissao | date: 'dd/MM/yyyy \'às\' HH:mm' }}</span>
+    </div>
+
+  </div>
 }
