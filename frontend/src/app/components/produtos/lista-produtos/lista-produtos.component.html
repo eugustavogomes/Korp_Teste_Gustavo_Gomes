@@ -36,7 +36,9 @@
     <ng-template #body let-p>
       <tr>
         <td><code class="codigo-badge">{{ p.codigo }}</code></td>
-        <td><strong>{{ p.descricao }}</strong></td>
+        <td>
+          <div class="produto-descricao">{{ p.descricao }}</div>
+        </td>
         <td class="text-center">
           <span [class]="p.saldo === 0 ? 'saldo-zero' : 'saldo-ok'">{{ p.saldo }}</span>
         </td>

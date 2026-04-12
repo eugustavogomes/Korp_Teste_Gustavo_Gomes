@@ -9,7 +9,38 @@
   font-size: $font-size-xs;
   font-family: 'Courier New', monospace;
   letter-spacing: 0.04em;
+  border: 1px solid $color-border;
 }
 
-.saldo-ok   { color: $color-text-primary; font-weight: $font-weight-medium; }
-.saldo-zero { color: $color-error; font-weight: $font-weight-semibold; }
+.saldo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 3px 10px;
+  border-radius: $radius-xl;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.03em;
+}
+
+.saldo-ok {
+  @extend .saldo-badge;
+  background: #F0FDF4;
+  color: #15803D;
+  outline: 0.5px solid currentColor;
+  outline-offset: -1px;
+}
+
+.saldo-zero {
+  @extend .saldo-badge;
+  background: #FEF2F2;
+  color: $color-error;
+  outline: 0.5px solid currentColor;
+  outline-offset: -1px;
+}
+
+.produto-descricao {
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
