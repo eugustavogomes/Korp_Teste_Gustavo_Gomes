@@ -39,6 +39,17 @@ public class NotaFiscalService : INotaFiscalService
             Subtotal = i.Quantidade * i.PrecoUnitario
         }).ToList();
 
+        var reservaRequest = new ReservaEstoqueRequest
+        {
+            Itens = itens.Select(i => new ItemReservaEstoque
+            {
+                ProdutoId = i.ProdutoId,
+                Quantidade = i.Quantidade
+            }).ToList()
+        };
+
+        await _estoqueClient.ReservarEstoqueAsync(reservaRequest);
+
         var notaFiscal = new NotaFiscal
         {
             Numero = string.Empty,
@@ -87,16 +98,27 @@ public class NotaFiscalService : INotaFiscalService
 
     public async Task CancelarAsync(int id)
     {
-        var notaFiscal = await _repository.GetByIdAsync(id);
+        var notaFiscal = await _repository.GetByIdWithItensAsync(id);
         if (notaFiscal == null)
             throw new NotaFiscalNotFoundException(id);
 
-        if (notaFiscal.Status == StatusNotaFiscal.Fechada)
-            throw new StatusInvalidoException("Nota fiscal já está fechada.");
+        if (notaFiscal.Status != StatusNotaFiscal.Aberta)
+            throw new StatusInvalidoException("Apenas notas com status Aberta podem ser canceladas.");
 
-        notaFiscal.Status = StatusNotaFiscal.Fechada;
+        var liberarRequest = new ReservaEstoqueRequest
+        {
+            Itens = notaFiscal.Itens.Select(i => new ItemReservaEstoque
+            {
+                ProdutoId = i.ProdutoId,
+                Quantidade = i.Quantidade
+            }).ToList()
+        };
+
+        await _estoqueClient.LiberarReservaAsync(liberarRequest);
+
+        notaFiscal.Status = StatusNotaFiscal.Cancelada;
         await _repository.SaveChangesAsync();
 
-        _logger.LogInformation("Nota fiscal {Id} cancelada.", id);
+        _logger.LogInformation("Nota fiscal {Id} cancelada. Reserva de estoque liberada.", id);
     }
 }

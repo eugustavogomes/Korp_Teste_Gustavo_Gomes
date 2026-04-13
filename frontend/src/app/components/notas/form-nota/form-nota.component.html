@@ -26,8 +26,8 @@
         <ng-template #item let-p>
           <div class="select-option">
             <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
-            <span [class]="p.saldo === 0 ? 'saldo-hint saldo-hint--zero' : p.saldo <= 5 ? 'saldo-hint saldo-hint--low' : 'saldo-hint'">
-              {{ p.saldo }} em estoque
+            <span [class]="p.saldoDisponivel === 0 ? 'saldo-hint saldo-hint--zero' : p.saldoDisponivel <= 5 ? 'saldo-hint saldo-hint--low' : 'saldo-hint'">
+              {{ p.saldoDisponivel }} disponível
             </span>
           </div>
         </ng-template>

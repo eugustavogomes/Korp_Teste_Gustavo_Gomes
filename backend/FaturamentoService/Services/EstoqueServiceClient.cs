@@ -14,6 +14,34 @@ public class EstoqueClient : IEstoqueClient
         _logger = logger;
     }
 
+    public async Task ReservarEstoqueAsync(ReservaEstoqueRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/produtos/reservar-estoque", request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            _logger.LogError("EstoqueService retornou {Status}: {Content}", response.StatusCode, content);
+
+            var mensagem = ExtrairMensagem(content) ?? $"Erro {(int)response.StatusCode} no EstoqueService";
+            throw new EstoqueException(mensagem, (int)response.StatusCode);
+        }
+    }
+
+    public async Task LiberarReservaAsync(ReservaEstoqueRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/produtos/liberar-reserva", request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            _logger.LogError("EstoqueService retornou {Status}: {Content}", response.StatusCode, content);
+
+            var mensagem = ExtrairMensagem(content) ?? $"Erro {(int)response.StatusCode} no EstoqueService";
+            throw new EstoqueException(mensagem, (int)response.StatusCode);
+        }
+    }
+
     public async Task BaixarEstoqueAsync(BaixaEstoqueRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("api/produtos/baixa-estoque", request);

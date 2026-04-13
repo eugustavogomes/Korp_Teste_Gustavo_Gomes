@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
@@ -31,6 +31,7 @@ export class FormNota implements OnInit {
   private produtoService = inject(ProdutoService);
   private notaService    = inject(NotaFiscalService);
   private router         = inject(Router);
+  private cdr            = inject(ChangeDetectorRef);
 
   readonly produtos = this.produtoService.produtos;
 
@@ -43,9 +44,7 @@ export class FormNota implements OnInit {
   erro: string | null = null;
 
   ngOnInit(): void {
-    if (this.produtos().length === 0) {
-      this.produtoService.carregar();
-    }
+    this.produtoService.carregar();
   }
 
   get total(): number {
@@ -61,7 +60,7 @@ export class FormNota implements OnInit {
     const jaAdicionado = this.itens
       .filter(i => i.produto.id === this.produtoSelecionado!.id)
       .reduce((s, i) => s + i.quantidade, 0);
-    return this.produtoSelecionado.saldo - jaAdicionado;
+    return this.produtoSelecionado.saldoDisponivel - jaAdicionado;
   }
 
   onPrecoInput(event: Event): void {
@@ -91,8 +90,8 @@ export class FormNota implements OnInit {
       .filter(i => i.produto.id === this.produtoSelecionado!.id)
       .reduce((total, i) => total + i.quantidade, 0);
 
-    if (jaAdicionado + this.quantidade > this.produtoSelecionado.saldo) {
-      this.erro = `Saldo insuficiente para "${this.produtoSelecionado.descricao}". Disponível: ${this.produtoSelecionado.saldo - jaAdicionado}`;
+    if (jaAdicionado + this.quantidade > this.produtoSelecionado.saldoDisponivel) {
+      this.erro = `Saldo insuficiente para "${this.produtoSelecionado.descricao}". Disponível: ${this.produtoSelecionado.saldoDisponivel - jaAdicionado}`;
       return;
     }
 
@@ -139,6 +138,7 @@ export class FormNota implements OnInit {
       error: err => {
         this.erro = err.mensagem || 'Erro ao emitir nota fiscal';
         this.salvando = false;
+        this.cdr.markForCheck();
       },
     });
   }

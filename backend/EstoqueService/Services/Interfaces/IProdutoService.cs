@@ -10,5 +10,7 @@ public interface IProdutoService
     Task<Produto> CreateAsync(Produto produto);
     Task UpdateAsync(int id, Produto produto);
     Task DeleteAsync(int id);
+    Task ReservarEstoqueAsync(ReservaEstoqueRequest request);
+    Task LiberarReservaAsync(ReservaEstoqueRequest request);
     Task BaixarEstoqueAsync(BaixaEstoqueRequest request);
 }

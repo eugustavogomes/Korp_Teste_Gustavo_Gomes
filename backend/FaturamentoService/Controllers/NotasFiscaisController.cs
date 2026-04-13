@@ -43,10 +43,30 @@ public class NotasFiscaisController : ControllerBase
             var notaFiscal = await _service.EmitirAsync(request);
             return CreatedAtAction(nameof(GetNotaFiscal), new { id = notaFiscal.Id }, notaFiscal);
         }
+        catch (EstoqueException ex) when (ex.StatusCode == 400)
+        {
+            _logger.LogWarning("EstoqueService rejeitou a reserva: {Mensagem}", ex.Message);
+            return BadRequest(new { mensagem = ex.Message });
+        }
+        catch (EstoqueException ex) when (ex.StatusCode == 404)
+        {
+            _logger.LogWarning("Produto não encontrado no estoque: {Mensagem}", ex.Message);
+            return UnprocessableEntity(new { mensagem = ex.Message });
+        }
+        catch (EstoqueException ex)
+        {
+            _logger.LogError("EstoqueService retornou {Status}: {Mensagem}", ex.StatusCode, ex.Message);
+            return StatusCode(503, new { mensagem = "EstoqueService indisponível. Tente novamente em instantes." });
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Falha de conexão com EstoqueService ao emitir nota");
+            return StatusCode(503, new { mensagem = "EstoqueService indisponível. Tente novamente em instantes." });
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao emitir nota fiscal");
-            return StatusCode(500, "Erro interno do servidor");
+            return StatusCode(500, new { mensagem = "Erro interno do servidor." });
         }
     }
 

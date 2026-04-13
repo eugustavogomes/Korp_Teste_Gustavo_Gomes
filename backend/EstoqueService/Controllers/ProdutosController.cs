@@ -92,6 +92,60 @@ public class ProdutosController : ControllerBase
         }
     }
 
+    [HttpPost("reservar-estoque")]
+    public async Task<IActionResult> ReservarEstoque([FromBody] ReservaEstoqueRequest request)
+    {
+        try
+        {
+            await _service.ReservarEstoqueAsync(request);
+            return Ok();
+        }
+        catch (ProdutoNotFoundException ex)
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
+        catch (SaldoInsuficienteException ex)
+        {
+            return BadRequest(new { mensagem = ex.Message });
+        }
+        catch (ConcurrencyException ex)
+        {
+            return Conflict(new { mensagem = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao reservar estoque");
+            return StatusCode(500, "Erro interno do servidor");
+        }
+    }
+
+    [HttpPost("liberar-reserva")]
+    public async Task<IActionResult> LiberarReserva([FromBody] ReservaEstoqueRequest request)
+    {
+        try
+        {
+            await _service.LiberarReservaAsync(request);
+            return Ok();
+        }
+        catch (ProdutoNotFoundException ex)
+        {
+            return NotFound(new { mensagem = ex.Message });
+        }
+        catch (ReservaInsuficienteException ex)
+        {
+            return BadRequest(new { mensagem = ex.Message });
+        }
+        catch (ConcurrencyException ex)
+        {
+            return Conflict(new { mensagem = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao liberar reserva");
+            return StatusCode(500, "Erro interno do servidor");
+        }
+    }
+
     [HttpPost("baixa-estoque")]
     public async Task<IActionResult> BaixarEstoque([FromBody] BaixaEstoqueRequest request)
     {
@@ -102,15 +156,15 @@ public class ProdutosController : ControllerBase
         }
         catch (ProdutoNotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound(new { mensagem = ex.Message });
         }
         catch (SaldoInsuficienteException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { mensagem = ex.Message });
         }
         catch (ConcurrencyException ex)
         {
-            return Conflict(ex.Message);
+            return Conflict(new { mensagem = ex.Message });
         }
         catch (Exception ex)
         {

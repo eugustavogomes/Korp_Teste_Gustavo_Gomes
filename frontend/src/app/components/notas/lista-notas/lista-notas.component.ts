@@ -114,11 +114,15 @@ export class ListaNotas {
     });
   }
 
-  severityStatus(status: StatusNotaFiscal): 'success' | 'secondary' {
-    return status === StatusNotaFiscal.Aberta ? 'success' : 'secondary';
+  severityStatus(status: StatusNotaFiscal): 'success' | 'secondary' | 'danger' {
+    if (status === StatusNotaFiscal.Aberta)    return 'success';
+    if (status === StatusNotaFiscal.Cancelada) return 'danger';
+    return 'secondary';
   }
 
   labelStatus(status: StatusNotaFiscal): string {
-    return status === StatusNotaFiscal.Aberta ? 'Aberta' : 'Fechada';
+    if (status === StatusNotaFiscal.Aberta)    return 'Aberta';
+    if (status === StatusNotaFiscal.Cancelada) return 'Cancelada';
+    return 'Fechada';
   }
 }

@@ -49,8 +49,8 @@ export class ListaProdutos implements OnInit {
   });
 
   get kpiTotal()      { return this.produtos().length; }
-  get kpiSemEstoque() { return this.produtos().filter(p => p.saldo === 0).length; }
-  get kpiCritico()    { return this.produtos().filter(p => p.saldo > 0 && p.saldo < 5).length; }
+  get kpiSemEstoque() { return this.produtos().filter(p => p.saldoDisponivel === 0).length; }
+  get kpiCritico()    { return this.produtos().filter(p => p.saldoDisponivel > 0 && p.saldoDisponivel < 5).length; }
 
   saldoClass(saldo: number): string {
     if (saldo === 0)  return 'saldo-zero';

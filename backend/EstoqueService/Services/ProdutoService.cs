@@ -60,6 +60,66 @@ public class ProdutoService : IProdutoService
         await _repository.SaveChangesAsync();
     }
 
+    public async Task ReservarEstoqueAsync(ReservaEstoqueRequest request)
+    {
+        await using var transaction = await _repository.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var item in request.Itens)
+            {
+                var produto = await _repository.GetByIdAsync(item.ProdutoId);
+
+                if (produto == null)
+                    throw new ProdutoNotFoundException(item.ProdutoId);
+
+                if (produto.SaldoDisponivel < item.Quantidade)
+                    throw new SaldoInsuficienteException(produto.Descricao, produto.SaldoDisponivel, item.Quantidade);
+
+                produto.SaldoReservado += item.Quantidade;
+                produto.DataAtualizacao = DateTime.UtcNow;
+            }
+
+            await _repository.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            _logger.LogError("Erro de concorrência ao reservar estoque");
+            throw new ConcurrencyException();
+        }
+    }
+
+    public async Task LiberarReservaAsync(ReservaEstoqueRequest request)
+    {
+        await using var transaction = await _repository.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var item in request.Itens)
+            {
+                var produto = await _repository.GetByIdAsync(item.ProdutoId);
+
+                if (produto == null)
+                    throw new ProdutoNotFoundException(item.ProdutoId);
+
+                if (produto.SaldoReservado < item.Quantidade)
+                    throw new ReservaInsuficienteException(produto.Descricao, produto.SaldoReservado, item.Quantidade);
+
+                produto.SaldoReservado -= item.Quantidade;
+                produto.DataAtualizacao = DateTime.UtcNow;
+            }
+
+            await _repository.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            _logger.LogError("Erro de concorrência ao liberar reserva");
+            throw new ConcurrencyException();
+        }
+    }
+
     public async Task BaixarEstoqueAsync(BaixaEstoqueRequest request)
     {
         await using var transaction = await _repository.BeginTransactionAsync();
@@ -76,7 +136,9 @@ public class ProdutoService : IProdutoService
                 if (produto.Saldo < item.Quantidade)
                     throw new SaldoInsuficienteException(produto.Descricao, produto.Saldo, item.Quantidade);
 
+                // Converte a reserva em baixa física
                 produto.Saldo -= item.Quantidade;
+                produto.SaldoReservado = Math.Max(0, produto.SaldoReservado - item.Quantidade);
                 produto.DataAtualizacao = DateTime.UtcNow;
             }
 

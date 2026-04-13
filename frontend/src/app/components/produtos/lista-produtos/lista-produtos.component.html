@@ -113,20 +113,32 @@
           Descrição <p-sortIcon field="descricao" />
         </th>
         <th class="text-center" pSortableColumn="saldo">
-          Saldo <p-sortIcon field="saldo" />
+          Físico <p-sortIcon field="saldo" />
+        </th>
+        <th class="text-center" pSortableColumn="saldoReservado">
+          Reservado <p-sortIcon field="saldoReservado" />
+        </th>
+        <th class="text-center" pSortableColumn="saldoDisponivel">
+          Disponível <p-sortIcon field="saldoDisponivel" />
         </th>
         <th>Ações</th>
       </tr>
     </ng-template>
 
     <ng-template #body let-p>
-      <tr [class]="rowClass(p.saldo)">
+      <tr [class]="rowClass(p.saldoDisponivel)">
         <td><code class="codigo-badge">{{ p.codigo }}</code></td>
         <td>
           <div class="produto-descricao">{{ p.descricao }}</div>
         </td>
         <td class="text-center">
-          <span [class]="saldoClass(p.saldo)">{{ p.saldo }}</span>
+          <span class="saldo-fisico">{{ p.saldo }}</span>
+        </td>
+        <td class="text-center">
+          <span class="saldo-reservado">{{ p.saldoReservado }}</span>
+        </td>
+        <td class="text-center">
+          <span [class]="saldoClass(p.saldoDisponivel)">{{ p.saldoDisponivel }}</span>
         </td>
         <td class="text-right">
           <p-button icon="pi pi-pen-to-square" [text]="true" [rounded]="true" severity="secondary" pTooltip="Editar" (onClick)="abrirEditar(p)" />
@@ -137,7 +149,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="4">
+        <td colspan="6">
           @if (erroCarregamento(); as erroMsg) {
             <div class="empty-state empty-state--error">
               <i class="pi pi-exclamation-circle"></i>
