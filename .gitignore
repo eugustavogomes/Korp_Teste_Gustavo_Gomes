@@ -31,6 +31,7 @@ PublishProfiles/
 !.env.example
 *.secret
 secrets.json
+appsettings.Development.json
 appsettings.Production.json
 appsettings.Staging.json
 
