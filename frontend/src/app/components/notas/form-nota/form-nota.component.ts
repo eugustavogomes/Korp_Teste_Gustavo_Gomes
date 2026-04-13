@@ -52,6 +52,18 @@ export class FormNota implements OnInit {
     return this.itens.reduce((s, i) => s + i.quantidade * i.precoUnitario, 0);
   }
 
+  get totalUnidades(): number {
+    return this.itens.reduce((s, i) => s + i.quantidade, 0);
+  }
+
+  get saldoRestante(): number {
+    if (!this.produtoSelecionado) return 0;
+    const jaAdicionado = this.itens
+      .filter(i => i.produto.id === this.produtoSelecionado!.id)
+      .reduce((s, i) => s + i.quantidade, 0);
+    return this.produtoSelecionado.saldo - jaAdicionado;
+  }
+
   onPrecoInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const digits = input.value.replace(/\D/g, '');

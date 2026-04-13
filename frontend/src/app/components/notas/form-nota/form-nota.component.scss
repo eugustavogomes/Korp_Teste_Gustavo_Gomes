@@ -1,5 +1,28 @@
 @use '../../../../styles/variables' as *;
 
+// =============================================================================
+// SEÇÕES
+// =============================================================================
+
+.form-section {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.items-section {
+  margin-bottom: $spacing-md;
+}
+
+.items-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+}
+
 .section-label {
   margin: 0 0 $spacing-sm;
   font-size: $font-size-xs;
@@ -8,6 +31,26 @@
   text-transform: uppercase;
   color: $color-text-secondary;
 }
+
+.items-header .section-label {
+  margin: 0;
+}
+
+.items-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  background: $color-primary-lighter;
+  color: $color-primary;
+  border-radius: $radius-xl;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  border: 1px solid rgba(30, 64, 175, 0.2);
+}
+
+// =============================================================================
+// FORMULÁRIO DE ITEM
+// =============================================================================
 
 .item-form {
   display: flex;
@@ -46,9 +89,23 @@
 
 .field-price {
   flex: 1;
-  min-width: 140px;
+  min-width: 130px;
 
   input { width: 100%; }
+}
+
+.field-subtotal {
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.subtotal-preview {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  padding: 7px 0 6px;
+  white-space: nowrap;
 }
 
 .btn-add {
@@ -69,19 +126,149 @@
   font-size: $font-size-xs;
   color: $color-text-secondary;
   white-space: nowrap;
+
+  &--low  { color: #B45309; font-weight: $font-weight-medium; }
+  &--zero { color: $color-error; font-weight: $font-weight-medium; }
 }
 
-.total-row {
-  text-align: right;
-  padding: $spacing-sm 0 0;
-  border-top: 1px solid $color-border;
-  margin-top: $spacing-xs;
-  font-size: $font-size-md;
+// =============================================================================
+// INDICADOR DE PRODUTO SELECIONADO
+// =============================================================================
+
+.produto-info {
+  display: flex;
+  gap: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  background: $color-background;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+
+  &__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+
+  &__value {
+    font-size: $font-size-sm;
+    font-family: 'Courier New', monospace;
+    background: $color-surface-variant;
+    padding: 1px 6px;
+    border-radius: $radius-sm;
+    border: 1px solid $color-border;
+    color: $color-text-secondary;
+  }
+
+  &__saldo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+
+    i { font-size: 0.8rem; }
+
+    &--ok   { color: #15803D; }
+    &--low  { color: #B45309; }
+    &--zero { color: $color-error; }
+  }
+}
+
+// =============================================================================
+// TABELA DE ITENS
+// =============================================================================
+
+.items-scroll {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+
+  // Mantém o header fixo durante o scroll
+  :host ::ng-deep thead tr th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: $color-surface;
+  }
+}
+
+.col-qty      { width: 60px; }
+.col-price    { width: 120px; }
+.col-subtotal { width: 120px; }
+.col-action   { width: 50px; }
+
+.item-produto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-codigo {
+  font-size: $font-size-xs;
+  font-family: 'Courier New', monospace;
+  background: $color-surface-variant;
+  color: $color-text-secondary;
+  padding: 1px 5px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  align-self: flex-start;
+}
+
+.item-descricao {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
   color: $color-text-primary;
 }
 
+// =============================================================================
+// TOTAL
+// =============================================================================
+
+.total-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-md;
+  margin-top: $spacing-xs;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+
+  &__meta {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+  }
+
+  &__value {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+}
+
+// =============================================================================
+// EMPTY HINT
+// =============================================================================
+
 .empty-hint {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  border: 1.5px dashed $color-border;
+  border-radius: $radius-md;
   color: $color-text-secondary;
   font-size: $font-size-sm;
-  margin: $spacing-md 0;
+
+  i {
+    font-size: 1.1rem;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
 }

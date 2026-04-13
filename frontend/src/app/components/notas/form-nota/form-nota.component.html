@@ -4,103 +4,153 @@
   </div>
 }
 
+<div class="form-section">
+  <p class="section-label">ADICIONAR ITEM</p>
 
-<div class="item-form">
-  <div class="field-group">
-    <label class="field-label">Produto</label>
-    <p-select
-      [options]="produtos()"
-      [(ngModel)]="produtoSelecionado"
-      optionLabel="descricao"
-      placeholder="Selecionar produto..."
-      class="field-produto"
-      [filter]="true"
-      filterBy="descricao,codigo"
-      appendTo="body"
-    >
-      <ng-template #selectedItem let-p>
-        <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
-      </ng-template>
-      <ng-template #item let-p>
-        <div class="select-option">
+  <div class="item-form">
+    <div class="field-group">
+      <label class="field-label">Produto</label>
+      <p-select
+        [options]="produtos()"
+        [(ngModel)]="produtoSelecionado"
+        optionLabel="descricao"
+        placeholder="Buscar por código ou descrição..."
+        class="field-produto"
+        [filter]="true"
+        filterBy="descricao,codigo"
+        appendTo="body"
+      >
+        <ng-template #selectedItem let-p>
           <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
-          <span class="saldo-hint">saldo: {{ p.saldo }}</span>
+        </ng-template>
+        <ng-template #item let-p>
+          <div class="select-option">
+            <span><strong>{{ p.codigo }}</strong> — {{ p.descricao }}</span>
+            <span [class]="p.saldo === 0 ? 'saldo-hint saldo-hint--zero' : p.saldo <= 5 ? 'saldo-hint saldo-hint--low' : 'saldo-hint'">
+              {{ p.saldo }} em estoque
+            </span>
+          </div>
+        </ng-template>
+      </p-select>
+    </div>
+
+    @if (produtoSelecionado) {
+      <div class="produto-info">
+        <div class="produto-info__detail">
+          <span class="produto-info__label">Código</span>
+          <code class="produto-info__value">{{ produtoSelecionado.codigo }}</code>
         </div>
-      </ng-template>
-    </p-select>
-  </div>
+        <div class="produto-info__detail">
+          <span class="produto-info__label">Saldo disponível</span>
+          <span [class]="saldoRestante === 0 ? 'produto-info__saldo produto-info__saldo--zero'
+                        : saldoRestante <= 5  ? 'produto-info__saldo produto-info__saldo--low'
+                        : 'produto-info__saldo produto-info__saldo--ok'">
+            <i [class]="saldoRestante === 0 ? 'pi pi-times-circle' : saldoRestante <= 5 ? 'pi pi-exclamation-triangle' : 'pi pi-check-circle'"></i>
+            {{ saldoRestante }} {{ saldoRestante === 1 ? 'unidade' : 'unidades' }}
+          </span>
+        </div>
+      </div>
+    }
 
-  <div class="item-row">
-    <div class="field-group field-qty">
-      <label class="field-label">Quantidade</label>
-      <p-inputnumber
-        [(ngModel)]="quantidade"
-        [min]="1"
-        placeholder="1"
+    <div class="item-row">
+      <div class="field-group field-qty">
+        <label class="field-label">Quantidade</label>
+        <p-inputnumber
+          [(ngModel)]="quantidade"
+          [min]="1"
+          [max]="saldoRestante || 9999"
+        />
+      </div>
+
+      <div class="field-group field-price">
+        <label class="field-label">Valor unitário</label>
+        <input
+          pInputText
+          type="text"
+          inputmode="numeric"
+          [value]="precoDisplay"
+          (input)="onPrecoInput($event)"
+          placeholder="R$ 0,00"
+          autocomplete="off"
+        />
+      </div>
+
+      @if (produtoSelecionado && precoUnitario > 0 && quantidade > 0) {
+        <div class="field-group field-subtotal">
+          <span class="field-label">Subtotal</span>
+          <span class="subtotal-preview">R$ {{ quantidade * precoUnitario | number: '1.2-2' }}</span>
+        </div>
+      }
+
+      <p-button
+        label="Adicionar"
+        icon="pi pi-plus"
+        class="btn-add"
+        [disabled]="!produtoSelecionado || quantidade <= 0 || precoUnitario <= 0"
+        (onClick)="adicionarItem()"
       />
     </div>
-
-    <div class="field-group field-price">
-      <label class="field-label">Valor unitário</label>
-      <input
-        pInputText
-        type="text"
-        inputmode="numeric"
-        [value]="precoDisplay"
-        (input)="onPrecoInput($event)"
-        placeholder="R$ 0,00"
-        autocomplete="off"
-      />
-    </div>
-
-    <p-button
-      label="Adicionar"
-      icon="pi pi-plus"
-      class="btn-add"
-      [disabled]="!produtoSelecionado || quantidade <= 0 || precoUnitario <= 0"
-      (onClick)="adicionarItem()"
-    />
   </div>
 </div>
 
-@if (itens.length > 0) {
-  <p class="section-label mt-md">ITENS DA NOTA</p>
-
-  <p-table [value]="itens" [tableStyle]="{'width':'100%'}">
-    <ng-template #header>
-      <tr>
-        <th>Produto</th>
-        <th class="text-right">Qtd</th>
-        <th class="text-right">Preço Un.</th>
-        <th class="text-right">Subtotal</th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template #body let-item let-i="rowIndex">
-      <tr>
-        <td><strong>{{ item.produto.descricao }}</strong></td>
-        <td class="text-right">{{ item.quantidade }}</td>
-        <td class="text-right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
-        <td class="text-right font-medium">R$ {{ item.quantidade * item.precoUnitario | number: '1.2-2' }}</td>
-        <td class="text-right">
-          <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" pTooltip="Remover" (onClick)="removerItem(i)" />
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-
-  <div class="total-row">
-    <strong>Total: R$ {{ total | number: '1.2-2' }}</strong>
+<div class="items-section">
+  <div class="items-header">
+    <p class="section-label">ITENS DA NOTA</p>
+    @if (itens.length > 0) {
+      <span class="items-badge">{{ itens.length }} {{ itens.length === 1 ? 'item' : 'itens' }}</span>
+    }
   </div>
-} @else {
-  <p class="empty-hint">Adicione ao menos um item para emitir a nota.</p>
-}
+
+  @if (itens.length > 0) {
+    <div class="items-scroll">
+    <p-table [value]="itens" [tableStyle]="{'width':'100%'}">
+      <ng-template #header>
+        <tr>
+          <th>Produto</th>
+          <th class="text-center col-qty">Qtd</th>
+          <th class="text-right col-price">Preço Un.</th>
+          <th class="text-right col-subtotal">Subtotal</th>
+          <th class="col-action"></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item let-i="rowIndex">
+        <tr>
+          <td>
+            <div class="item-produto">
+              <code class="item-codigo">{{ item.produto.codigo }}</code>
+              <span class="item-descricao">{{ item.produto.descricao }}</span>
+            </div>
+          </td>
+          <td class="text-center">{{ item.quantidade }}</td>
+          <td class="text-right">R$ {{ item.precoUnitario | number: '1.2-2' }}</td>
+          <td class="text-right font-medium">R$ {{ item.quantidade * item.precoUnitario | number: '1.2-2' }}</td>
+          <td class="text-right">
+            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" pTooltip="Remover item" (onClick)="removerItem(i)" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    </div>
+
+    <div class="total-box">
+      <span class="total-box__meta">{{ totalUnidades }} {{ totalUnidades === 1 ? 'unidade' : 'unidades' }} em {{ itens.length }} {{ itens.length === 1 ? 'item' : 'itens' }}</span>
+      <span class="total-box__value">Total: R$ {{ total | number: '1.2-2' }}</span>
+    </div>
+
+  } @else {
+    <div class="empty-hint">
+      <i class="pi pi-shopping-cart"></i>
+      <span>Nenhum item adicionado. Selecione um produto acima e clique em <strong>Adicionar</strong>.</span>
+    </div>
+  }
+</div>
 
 <div class="dialog-footer">
   <p-button label="Cancelar" [text]="true" severity="secondary" (onClick)="cancelar()" />
   <p-button
-    label="{{ salvando ? 'Emitindo...' : 'Emitir Nota' }}"
+    [label]="salvando ? 'Emitindo...' : 'Emitir Nota'"
     icon="pi pi-receipt"
+    [loading]="salvando"
     [disabled]="itens.length === 0 || salvando"
     (onClick)="emitir()"
   />
