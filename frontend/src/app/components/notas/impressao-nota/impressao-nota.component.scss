@@ -1,5 +1,8 @@
 @use '../../../../styles/variables' as *;
 
+$divider-color: $color-border;
+$divider-width: 0.5px; 
+
 // =============================================================================
 // INTERFACE — Estilos da tela (não impressos)
 // =============================================================================
@@ -95,7 +98,8 @@
 
 .nf-documento {
   background: white;
-  border: 1px solid $color-border;
+  border: 1px solid $color-border; 
+  border-top: $divider-width solid $divider-color; 
   border-radius: $radius-lg;
   padding: $spacing-xl $spacing-xl $spacing-lg;
   box-shadow: $shadow-1;
@@ -106,7 +110,7 @@
   text-align: center;
   padding-bottom: $spacing-lg;
   margin-bottom: $spacing-lg;
-  border-bottom: 0.5px solid #666666;
+  border-bottom: $divider-width solid $divider-color; 
 
   &__title {
     font-size: 20px;
@@ -123,7 +127,7 @@
 
 .nf-info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0;
   border: 1px solid $color-border;
   border-radius: $radius-md;
@@ -134,8 +138,13 @@
 .nf-info-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: $spacing-md $spacing-lg;
+  gap: 2px;
+  padding: $spacing-md;
+
+  flex: 1;
+
+  align-items: center;
+  text-align: center;
 
   & + & {
     border-left: 1px solid $color-border;
@@ -224,7 +233,7 @@
   .col-subtotal { width: 20%; text-align: right; }
 
   .total-row td {
-    border-top: 2px solid $color-border;
+    border-top: $divider-width solid $divider-color;
     border-bottom: none;
     padding-top: $spacing-md;
     background: #F8FAFF;
@@ -246,7 +255,6 @@
   }
 }
 
-// Rodapé do documento (só no print)
 .nf-doc-footer {
   display: none;
   text-align: center;
@@ -257,7 +265,6 @@
   color: #888;
 }
 
-// Faixa de cópia (só no print, só quando Fechada)
 .nf-copia-banner {
   display: none;
   text-align: center;
@@ -294,7 +301,7 @@
   .nf-copia-banner { display: block; }
 
   .nf-info-grid {
-    border: 1px solid #ccc;
+    border: $divider-width solid $divider-color;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -314,6 +321,7 @@
 
     .total-row td {
       background: #f0f4ff !important;
+      border-top: $divider-width solid $divider-color !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
