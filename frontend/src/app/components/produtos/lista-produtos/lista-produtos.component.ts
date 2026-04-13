@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -8,21 +9,23 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ProdutoService } from '../../../services/produto.service';
+import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { Produto } from '../../../models/produto.model';
 import { FormProduto } from '../form-produto/form-produto.component';
 
 @Component({
   selector: 'app-lista-produtos',
-  imports: [TableModule, ButtonModule, CardModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
+  imports: [DecimalPipe, TableModule, ButtonModule, CardModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
   providers: [ConfirmationService],
   templateUrl: './lista-produtos.component.html',
   styleUrl: './lista-produtos.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListaProdutos {
+export class ListaProdutos implements OnInit {
   @ViewChild('dt') table!: Table;
 
   private produtoService      = inject(ProdutoService);
+  private notaService         = inject(NotaFiscalService);
   private dialogService       = inject(DialogService);
   private confirmationService = inject(ConfirmationService);
 
@@ -31,7 +34,26 @@ export class ListaProdutos {
   readonly erroCarregamento  = this.produtoService.erro;
   erro: string | null = null;
 
+  get kpiTotal()      { return this.produtos().length; }
+  get kpiSemEstoque() { return this.produtos().filter(p => p.saldo === 0).length; }
+  get kpiCritico()    { return this.produtos().filter(p => p.saldo > 0 && p.saldo <= 5).length; }
+
+  get kpiTopProdutos(): { descricao: string; quantidade: number }[] {
+    const map = new Map<number, { descricao: string; quantidade: number }>();
+    for (const nota of this.notaService.notas()) {
+      for (const item of nota.itens) {
+        const cur = map.get(item.produtoId) ?? { descricao: item.descricao, quantidade: 0 };
+        map.set(item.produtoId, { descricao: item.descricao, quantidade: cur.quantidade + item.quantidade });
+      }
+    }
+    return [...map.values()].sort((a, b) => b.quantidade - a.quantidade).slice(0, 3);
+  }
+
   private _lastSort: { field: string; order: number } | null = null;
+
+  ngOnInit(): void {
+    if (this.notaService.notas().length === 0) this.notaService.carregar();
+  }
 
   onSort(event: { field: string; order: number }): void {
     if (this._lastSort?.field === event.field && this._lastSort.order === -1 && event.order === 1) {

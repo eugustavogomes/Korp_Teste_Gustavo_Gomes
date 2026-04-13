@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { Table } from 'primeng/table';
@@ -16,7 +16,7 @@ import { FormNota } from '../form-nota/form-nota.component';
 
 @Component({
   selector: 'app-lista-notas',
-  imports: [RouterLink, DatePipe, DecimalPipe, TableModule, ButtonModule, CardModule, TagModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
+  imports: [RouterLink, DatePipe, DecimalPipe, NgClass, TableModule, ButtonModule, CardModule, TagModule, TooltipModule, DynamicDialogModule, ConfirmDialogModule],
   providers: [ConfirmationService],
   templateUrl: './lista-notas.component.html',
   styleUrl: './lista-notas.component.scss',
@@ -34,6 +34,11 @@ export class ListaNotas {
   readonly erroCarregamento  = this.notaService.erro;
   erro: string | null = null;
   StatusNotaFiscal = StatusNotaFiscal;
+
+  get kpiTotal()   { return this.notas().length; }
+  get kpiAbertas() { return this.notas().filter(n => n.status === StatusNotaFiscal.Aberta).length; }
+  get kpiFechadas(){ return this.notas().filter(n => n.status === StatusNotaFiscal.Fechada).length; }
+  get kpiReceita() { return this.notas().reduce((s, n) => s + n.total, 0); }
 
   private _lastSort: { field: string; order: number } | null = null;
 

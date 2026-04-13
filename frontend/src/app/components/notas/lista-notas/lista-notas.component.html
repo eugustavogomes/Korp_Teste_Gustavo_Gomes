@@ -14,12 +14,54 @@
 </div>
 }
 
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-card__icon kpi-card__icon--blue">
+      <i class="pi pi-file"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Total de Notas</span>
+      <span class="kpi-card__value">{{ kpiTotal }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon kpi-card__icon--green">
+      <i class="pi pi-check-circle"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Abertas</span>
+      <span class="kpi-card__value">{{ kpiAbertas }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon kpi-card__icon--gray">
+      <i class="pi pi-times-circle"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Fechadas</span>
+      <span class="kpi-card__value">{{ kpiFechadas }}</span>
+    </div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-card__icon kpi-card__icon--blue">
+      <i class="pi pi-dollar"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Receita Total</span>
+      <span class="kpi-card__value">R$ {{ kpiReceita | number: '1.2-2' }}</span>
+    </div>
+  </div>
+</div>
+
 <p-card>
   <p-table #dt [value]="notas()" [tableStyle]="{'width':'100%'}" [loading]="carregando()"
            sortMode="single" (onSort)="onSort($event)"
            sortField="dataEmissao" [sortOrder]="-1"
            [paginator]="true" [rows]="10"
-           [scrollable]="true" scrollHeight="flex">
+           [scrollable]="true">
 
     <ng-template #header>
       <tr>

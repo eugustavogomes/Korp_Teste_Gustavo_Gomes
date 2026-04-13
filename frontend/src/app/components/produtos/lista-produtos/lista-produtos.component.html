@@ -14,12 +14,69 @@
   </div>
 }
 
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-card__icon kpi-card__icon--blue">
+      <i class="pi pi-box"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Total de Produtos</span>
+      <span class="kpi-card__value">{{ kpiTotal }}</span>
+    </div>
+  </div>
+
+  <div [class]="kpiSemEstoque > 0 ? 'kpi-card kpi-card--alert' : 'kpi-card'">
+    <div [class]="kpiSemEstoque > 0 ? 'kpi-card__icon kpi-card__icon--red' : 'kpi-card__icon kpi-card__icon--gray'">
+      <i class="pi pi-times-circle"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Sem Estoque</span>
+      <span class="kpi-card__value">{{ kpiSemEstoque }}</span>
+    </div>
+  </div>
+
+  <div [class]="kpiCritico > 0 ? 'kpi-card kpi-card--warning' : 'kpi-card'">
+    <div [class]="kpiCritico > 0 ? 'kpi-card__icon kpi-card__icon--orange' : 'kpi-card__icon kpi-card__icon--gray'">
+      <i class="pi pi-exclamation-triangle"></i>
+    </div>
+    <div class="kpi-card__body">
+      <span class="kpi-card__label">Estoque Crítico</span>
+      <span class="kpi-card__value">{{ kpiCritico }}</span>
+      <span class="kpi-card__sub">1 a 5 unidades</span>
+    </div>
+  </div>
+
+  <div class="kpi-card kpi-card--ranking">
+    <div class="kpi-card__header">
+      <div class="kpi-card__icon kpi-card__icon--blue">
+        <i class="pi pi-chart-bar"></i>
+      </div>
+      <div class="kpi-card__body">
+        <span class="kpi-card__label">Top Produtos Vendidos</span>
+      </div>
+    </div>
+    @if (kpiTopProdutos.length > 0) {
+      <div class="kpi-ranking-list">
+        @for (p of kpiTopProdutos; track p.descricao; let i = $index) {
+          <div class="kpi-ranking-item">
+            <span [class]="'kpi-ranking-item__pos kpi-ranking-item__pos--' + (i + 1)">{{ i + 1 }}</span>
+            <span class="kpi-ranking-item__name">{{ p.descricao }}</span>
+            <span class="kpi-ranking-item__qty">{{ p.quantidade }} un.</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <span class="kpi-card__sub">Nenhuma venda registrada</span>
+    }
+  </div>
+</div>
+
 <p-card>
   <p-table #dt [value]="produtos()" [tableStyle]="{'width':'100%'}" [loading]="carregando()"
            sortMode="single" (onSort)="onSort($event)"
            sortField="id" [sortOrder]="-1"
            [paginator]="true" [rows]="10"
-           [scrollable]="true" scrollHeight="flex">
+           [scrollable]="true">
 
     <ng-template #header>
       <tr>

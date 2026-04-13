@@ -84,6 +84,153 @@ $breakpoint-desktop: 1024px;
 
 
 // =============================================================================
+// KPI CARDS — Indicadores de desempenho no topo das telas
+// =============================================================================
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-background;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-1;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    flex-shrink: 0;
+
+    i { font-size: 1.1rem; }
+
+    &--blue   { background: $color-primary-lighter; color: $color-primary; }
+    &--green  { background: #F0FDF4; color: #15803D; }
+    &--red    { background: #FEF2F2; color: #B91C1C; }
+    &--orange { background: #FFFBEB; color: #B45309; }
+    &--gray   { background: $color-surface-variant; color: $color-text-secondary; }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__value {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    line-height: 1;
+  }
+
+  &__sub {
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+    margin-top: 1px;
+  }
+
+  // Variante de alerta
+  &--alert {
+    border-color: #FECACA;
+    background: #FEF2F2;
+
+    .kpi-card__value { color: #B91C1C; }
+    .kpi-card__label { color: #B91C1C; opacity: 0.8; }
+  }
+
+  &--warning {
+    border-color: #FDE68A;
+    background: #FFFBEB;
+
+    .kpi-card__value { color: #B45309; }
+    .kpi-card__label { color: #B45309; opacity: 0.8; }
+  }
+}
+
+// KPI card de ranking (top produtos)
+.kpi-card--ranking {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  grid-column: span 2;
+
+  .kpi-card__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    width: 100%;
+  }
+
+  .kpi-ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .kpi-ranking-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    &__pos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: $font-size-xs;
+      font-weight: $font-weight-bold;
+      flex-shrink: 0;
+
+      &--1 { background: #FEF9C3; color: #854D0E; }
+      &--2 { background: $color-surface-variant; color: $color-text-secondary; }
+      &--3 { background: #FEF2F2; color: #B45309; }
+    }
+
+    &__name {
+      flex: 1;
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__qty {
+      font-size: $font-size-xs;
+      font-weight: $font-weight-semibold;
+      color: $color-text-secondary;
+      white-space: nowrap;
+    }
+  }
+}
+
+
+// =============================================================================
 // DIALOG FOOTER — Rodapé de ações em formulários/modais
 // =============================================================================
 
