@@ -35,10 +35,42 @@ export class ListaNotas {
   erro: string | null = null;
   StatusNotaFiscal = StatusNotaFiscal;
 
-  get kpiTotal()   { return this.notas().length; }
-  get kpiAbertas() { return this.notas().filter(n => n.status === StatusNotaFiscal.Aberta).length; }
-  get kpiFechadas(){ return this.notas().filter(n => n.status === StatusNotaFiscal.Fechada).length; }
-  get kpiReceita() { return this.notas().reduce((s, n) => s + n.total, 0); }
+  readonly filtro = signal<'hoje' | '7d' | '30d' | 'todos'>('todos');
+
+  readonly notasFiltradas = computed(() => {
+    const todas = this.notas();
+    const f = this.filtro();
+    if (f === 'todos') return todas;
+    const agora = new Date();
+    const inicio = new Date(agora);
+    if (f === 'hoje') {
+      inicio.setHours(0, 0, 0, 0);
+    } else if (f === '7d') {
+      inicio.setDate(agora.getDate() - 7);
+      inicio.setHours(0, 0, 0, 0);
+    } else {
+      inicio.setDate(agora.getDate() - 30);
+      inicio.setHours(0, 0, 0, 0);
+    }
+    return todas.filter(n => new Date(n.dataEmissao) >= inicio);
+  });
+
+  readonly busca = signal('');
+
+  readonly notasVisiveis = computed(() => {
+    const notas = this.notasFiltradas();
+    const q = this.busca().toLowerCase().trim();
+    if (!q) return notas;
+    return notas.filter(n =>
+      String(n.numero).includes(q) ||
+      n.itens.some(i => i.descricao.toLowerCase().includes(q))
+    );
+  });
+
+  readonly kpiTotal   = computed(() => this.notasFiltradas().length);
+  readonly kpiAbertas = computed(() => this.notasFiltradas().filter(n => n.status === StatusNotaFiscal.Aberta).length);
+  readonly kpiFechadas= computed(() => this.notasFiltradas().filter(n => n.status === StatusNotaFiscal.Fechada).length);
+  readonly kpiReceita = computed(() => this.notasFiltradas().reduce((s, n) => s + n.total, 0));
 
   private _lastSort: { field: string; order: number } | null = null;
 

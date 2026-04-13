@@ -32,6 +32,92 @@
 }
 
 
+.page-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.page-header__right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.date-filter {
+  display: flex;
+  align-items: center;
+  background: $color-surface-variant;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: 3px;
+  gap: 2px;
+
+  &__btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: $radius-lg;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-text-secondary;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+
+    &:hover:not(&--active) {
+      color: $color-text-primary;
+    }
+
+    &--active {
+      color: $color-primary;
+      background: $color-background;
+      box-shadow: $shadow-1;
+      outline: 0.5px solid $color-primary;
+      outline-offset: -0.5px;
+    }
+  }
+}
+
+.table-toolbar {
+  padding: $spacing-sm $spacing-md;
+  border-bottom: 1px solid $color-border;
+}
+
+.search-bar {
+  position: relative;
+  max-width: 320px;
+
+  &__icon {
+    position: absolute;
+    left: $spacing-sm;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 7px $spacing-sm 7px 32px;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    background: $color-background;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &::placeholder { color: $color-text-secondary; }
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+  }
+}
+
 .row-clickable {
   cursor: pointer;
 }

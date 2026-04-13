@@ -10,11 +10,15 @@ export type ServiceStatus = 'healthy' | 'degraded' | 'unhealthy' | 'unknown';
 export class HealthService implements OnDestroy {
   private http = inject(HttpClient);
   private sub = new Subscription();
+  private _polling = false;
 
   readonly estoqueStatus  = signal<ServiceStatus>('unknown');
   readonly faturamentoStatus = signal<ServiceStatus>('unknown');
 
   startPolling(): void {
+    if (this._polling) return;
+    this._polling = true;
+
     const INTERVAL_MS = 30_000;
 
     this.sub.add(
@@ -36,6 +40,12 @@ export class HealthService implements OnDestroy {
         )
       ).subscribe(r => this.faturamentoStatus.set(this.map(r.status)))
     );
+  }
+
+  stopPolling(): void {
+    this.sub.unsubscribe();
+    this.sub = new Subscription();
+    this._polling = false;
   }
 
   private map(status: string): ServiceStatus {

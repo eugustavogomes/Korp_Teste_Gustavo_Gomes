@@ -29,6 +29,22 @@
       background: transparent !important;
     }
   }
+
+  .tr-stock-low > td {
+    background: #FFFBEB !important;
+  }
+
+  .tr-stock-low:hover > td {
+    background: #FEF3C7 !important;
+  }
+
+  .tr-stock-critical > td {
+    background: #FEF2F2 !important;
+  }
+
+  .tr-stock-critical:hover > td {
+    background: #FEE2E2 !important;
+  }
 }
 
 
@@ -64,12 +80,67 @@
   outline-offset: -1px;
 }
 
+.saldo-low {
+  @extend .saldo-badge;
+  background: #FFFBEB;
+  color: #B45309;
+  outline: 0.5px solid currentColor;
+  outline-offset: -1px;
+}
+
+.saldo-critical {
+  @extend .saldo-badge;
+  background: #FEF2F2;
+  color: #B91C1C;
+  outline: 0.5px solid currentColor;
+  outline-offset: -1px;
+}
+
 .saldo-zero {
   @extend .saldo-badge;
   background: #FEF2F2;
   color: $color-error;
   outline: 0.5px solid currentColor;
   outline-offset: -1px;
+}
+
+.table-toolbar {
+  padding: $spacing-sm $spacing-md;
+  border-bottom: 1px solid $color-border;
+}
+
+.search-bar {
+  position: relative;
+  max-width: 320px;
+
+  &__icon {
+    position: absolute;
+    left: $spacing-sm;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    pointer-events: none;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 7px $spacing-sm 7px 32px;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    background: $color-background;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+
+    &::placeholder { color: $color-text-secondary; }
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+  }
 }
 
 .produto-descricao {

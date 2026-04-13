@@ -5,7 +5,15 @@
     <h2>Notas Fiscais</h2>
     <p class="page-subtitle">Emita e acompanhe as notas fiscais da sua empresa</p>
   </div>
-  <p-button label="Nova Nota" icon="pi pi-plus" (onClick)="abrirNova()" />
+  <nav class="date-filter">
+    <button class="date-filter__btn" [class.date-filter__btn--active]="filtro() === 'hoje'" (click)="filtro.set('hoje')">Hoje</button>
+    <button class="date-filter__btn" [class.date-filter__btn--active]="filtro() === '7d'" (click)="filtro.set('7d')">7 dias</button>
+    <button class="date-filter__btn" [class.date-filter__btn--active]="filtro() === '30d'" (click)="filtro.set('30d')">30 dias</button>
+    <button class="date-filter__btn" [class.date-filter__btn--active]="filtro() === 'todos'" (click)="filtro.set('todos')">Todos</button>
+  </nav>
+  <div class="page-header__right">
+    <p-button label="Nova Nota" icon="pi pi-plus" (onClick)="abrirNova()" />
+  </div>
 </div>
 
 @if (erro) {
@@ -21,7 +29,7 @@
     </div>
     <div class="kpi-card__body">
       <span class="kpi-card__label">Total de Notas</span>
-      <span class="kpi-card__value">{{ kpiTotal }}</span>
+      <span class="kpi-card__value">{{ kpiTotal() }}</span>
     </div>
   </div>
 
@@ -31,7 +39,7 @@
     </div>
     <div class="kpi-card__body">
       <span class="kpi-card__label">Abertas</span>
-      <span class="kpi-card__value">{{ kpiAbertas }}</span>
+      <span class="kpi-card__value">{{ kpiAbertas() }}</span>
     </div>
   </div>
 
@@ -41,7 +49,7 @@
     </div>
     <div class="kpi-card__body">
       <span class="kpi-card__label">Fechadas</span>
-      <span class="kpi-card__value">{{ kpiFechadas }}</span>
+      <span class="kpi-card__value">{{ kpiFechadas() }}</span>
     </div>
   </div>
 
@@ -51,13 +59,21 @@
     </div>
     <div class="kpi-card__body">
       <span class="kpi-card__label">Receita Total</span>
-      <span class="kpi-card__value">R$ {{ kpiReceita | number: '1.2-2' }}</span>
+      <span class="kpi-card__value">R$ {{ kpiReceita() | number: '1.2-2' }}</span>
     </div>
   </div>
 </div>
 
 <p-card>
-  <p-table #dt [value]="notas()" [tableStyle]="{'width':'100%'}" [loading]="carregando()"
+  <div class="table-toolbar">
+    <div class="search-bar">
+      <i class="pi pi-search search-bar__icon"></i>
+      <input class="search-bar__input" type="text" placeholder="Buscar por número ou produto..."
+             [value]="busca()" (input)="busca.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  <p-table #dt [value]="notasVisiveis()" [tableStyle]="{'width':'100%'}" [loading]="carregando()"
            sortMode="single" (onSort)="onSort($event)"
            sortField="dataEmissao" [sortOrder]="-1"
            [paginator]="true" [rows]="10"

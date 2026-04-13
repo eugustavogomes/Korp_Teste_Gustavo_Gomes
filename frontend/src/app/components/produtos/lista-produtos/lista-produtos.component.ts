@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { Table } from 'primeng/table';
@@ -36,9 +36,34 @@ export class ListaProdutos implements OnInit {
   erro: string | null = null;
   mostrarRanking = false;
 
+  readonly busca = signal('');
+
+  readonly produtosFiltrados = computed(() => {
+    const todos = this.produtos();
+    const q = this.busca().toLowerCase().trim();
+    if (!q) return todos;
+    return todos.filter(p =>
+      p.descricao.toLowerCase().includes(q) ||
+      p.codigo.toLowerCase().includes(q)
+    );
+  });
+
   get kpiTotal()      { return this.produtos().length; }
   get kpiSemEstoque() { return this.produtos().filter(p => p.saldo === 0).length; }
-  get kpiCritico()    { return this.produtos().filter(p => p.saldo > 0 && p.saldo <= 5).length; }
+  get kpiCritico()    { return this.produtos().filter(p => p.saldo > 0 && p.saldo < 5).length; }
+
+  saldoClass(saldo: number): string {
+    if (saldo === 0)  return 'saldo-zero';
+    if (saldo < 5)    return 'saldo-critical';
+    if (saldo < 10)   return 'saldo-low';
+    return 'saldo-ok';
+  }
+
+  rowClass(saldo: number): string {
+    if (saldo < 5)  return 'tr-stock-critical';
+    if (saldo < 10) return 'tr-stock-low';
+    return '';
+  }
 
   private get _rankingCompleto(): { descricao: string; quantidade: number }[] {
     const map = new Map<number, { descricao: string; quantidade: number }>();
