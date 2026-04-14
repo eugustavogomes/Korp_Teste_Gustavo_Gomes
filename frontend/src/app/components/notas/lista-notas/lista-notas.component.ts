@@ -10,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { StatusNotaFiscal } from '../../../models/nota-fiscal.model';
 import { FormNota } from '../form-nota/form-nota.component';
@@ -29,6 +29,7 @@ export class ListaNotas {
   private notaService         = inject(NotaFiscalService);
   private dialogService       = inject(DialogService);
   private confirmationService = inject(ConfirmationService);
+  private messageService      = inject(MessageService);
   private destroyRef          = inject(DestroyRef);
 
   readonly notas             = this.notaService.notas;
@@ -95,7 +96,10 @@ export class ListaNotas {
       dismissableMask: true,
     });
     ref!.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((salvo: boolean) => {
-      if (salvo) this.notaService.carregar();
+      if (salvo) {
+        this.notaService.carregar();
+        this.messageService.add({ severity: 'success', summary: 'Nota emitida', detail: 'Nota fiscal emitida com sucesso.' });
+      }
     });
   }
 
@@ -110,6 +114,7 @@ export class ListaNotas {
       accept: () => {
         this.erro = null;
         this.notaService.cancelarNota(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+          next: () => this.messageService.add({ severity: 'warn', summary: 'Nota cancelada', detail: 'Nota fiscal cancelada com sucesso.' }),
           error: () => (this.erro = 'Erro ao cancelar nota fiscal'),
         });
       },

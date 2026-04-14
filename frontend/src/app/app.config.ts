@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
 import { errorInterceptor } from './services/error-handler';
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     DialogService,
+    MessageService,
   ],
 };

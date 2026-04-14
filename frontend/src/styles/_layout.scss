@@ -115,11 +115,11 @@ $breakpoint-desktop: 1024px;
 
     i { font-size: 1.1rem; }
 
-    &--blue   { background: $color-primary-lighter; color: $color-primary; }
-    &--green  { background: #F0FDF4; color: #15803D; }
-    &--red    { background: #FEF2F2; color: #B91C1C; }
-    &--orange { background: #FFFBEB; color: #B45309; }
-    &--gray   { background: $color-surface-variant; color: $color-text-secondary; }
+    &--blue   { background: $color-primary-lighter; color: $color-primary;        outline: 1px solid rgba(30, 64, 175, 0.2);  outline-offset: -1px; }
+    &--green  { background: #F0FDF4;               color: #15803D;              outline: 1px solid rgba(21, 128, 61, 0.2);  outline-offset: -1px; }
+    &--red    { background: #FEF2F2;               color: #B91C1C;              outline: 1px solid rgba(185, 28, 28, 0.2); outline-offset: -1px; }
+    &--orange { background: #FFFBEB;               color: #B45309;              outline: 1px solid rgba(180, 83, 9, 0.2);   outline-offset: -1px; }
+    &--gray   { background: $color-surface-variant; color: $color-text-secondary; outline: 1px solid $color-border;           outline-offset: -1px; }
   }
 
   &__body {
@@ -149,6 +149,14 @@ $breakpoint-desktop: 1024px;
     font-size: $font-size-xs;
     color: $color-text-secondary;
     margin-top: 1px;
+  }
+
+  &--zero {
+    background: $color-surface-variant;
+    border-color: $color-border;
+
+    .kpi-card__value { color: $color-text-secondary; }
+    .kpi-card__label { color: $color-text-secondary; opacity: 0.7; }
   }
 
   // Variante de alerta

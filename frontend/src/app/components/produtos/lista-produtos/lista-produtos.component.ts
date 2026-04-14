@@ -9,7 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProdutoService } from '../../../services/produto.service';
 import { NotaFiscalService } from '../../../services/nota-fiscal.service';
 import { Produto } from '../../../models/produto.model';
@@ -30,6 +30,7 @@ export class ListaProdutos implements OnInit {
   private notaService         = inject(NotaFiscalService);
   private dialogService       = inject(DialogService);
   private confirmationService = inject(ConfirmationService);
+  private messageService      = inject(MessageService);
   private destroyRef          = inject(DestroyRef);
 
   readonly produtos          = this.produtoService.produtos;
@@ -106,7 +107,10 @@ export class ListaProdutos implements OnInit {
       dismissableMask: true,
     });
     ref!.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((salvo: boolean) => {
-      if (salvo) this.produtoService.carregar();
+      if (salvo) {
+        this.produtoService.carregar();
+        this.messageService.add({ severity: 'success', summary: 'Produto adicionado', detail: 'Produto cadastrado com sucesso.' });
+      }
     });
   }
 
@@ -121,7 +125,10 @@ export class ListaProdutos implements OnInit {
       data: { id: produto.id },
     });
     ref!.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((salvo: boolean) => {
-      if (salvo) this.produtoService.carregar();
+      if (salvo) {
+        this.produtoService.carregar();
+        this.messageService.add({ severity: 'success', summary: 'Produto atualizado', detail: 'Alterações salvas com sucesso.' });
+      }
     });
   }
 
@@ -136,6 +143,7 @@ export class ListaProdutos implements OnInit {
       accept: () => {
         this.erro = null;
         this.produtoService.excluirProduto(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+          next: () => this.messageService.add({ severity: 'warn', summary: 'Produto excluído', detail: 'Produto removido do catálogo.' }),
           error: () => (this.erro = 'Erro ao excluir produto'),
         });
       },

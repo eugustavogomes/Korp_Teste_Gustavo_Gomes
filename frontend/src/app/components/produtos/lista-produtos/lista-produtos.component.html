@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div [class]="kpiSemEstoque > 0 ? 'kpi-card kpi-card--alert' : 'kpi-card'">
+  <div [class]="kpiSemEstoque > 0 ? 'kpi-card kpi-card--alert' : 'kpi-card kpi-card--zero'">
     <div [class]="kpiSemEstoque > 0 ? 'kpi-card__icon kpi-card__icon--red' : 'kpi-card__icon kpi-card__icon--gray'">
       <i class="pi pi-times-circle"></i>
     </div>
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div [class]="kpiCritico > 0 ? 'kpi-card kpi-card--alert' : 'kpi-card'">
+  <div [class]="kpiCritico > 0 ? 'kpi-card kpi-card--alert' : 'kpi-card kpi-card--zero'">
     <div [class]="kpiCritico > 0 ? 'kpi-card__icon kpi-card__icon--red' : 'kpi-card__icon kpi-card__icon--gray'">
       <i class="pi pi-exclamation-triangle"></i>
     </div>
