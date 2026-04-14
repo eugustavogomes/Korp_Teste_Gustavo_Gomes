@@ -127,7 +127,7 @@ export class FormNota implements OnInit {
   }
 
   adicionarItem(): void {
-    if (!this.produtoSelecionado || this.quantidade <= 0 || this.precoUnitario <= 0) return;
+    if (!this.produtoSelecionado || this.quantidade <= 0 || this.precoUnitario <= 0 || !this.quantidade > !this.saldoRestante) return;
 
     const jaAdicionado = this.itens
       .filter(i => i.produto.id === this.produtoSelecionado!.id)
