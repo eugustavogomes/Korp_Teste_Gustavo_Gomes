@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FaturamentoService.Exceptions;
 using FaturamentoService.Services.Interfaces;
 
 namespace FaturamentoService.Services;

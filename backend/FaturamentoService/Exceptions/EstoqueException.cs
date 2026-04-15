@@ -1,4 +1,4 @@
-namespace FaturamentoService.Services;
+namespace FaturamentoService.Exceptions;
 
 public class EstoqueException : Exception
 {
